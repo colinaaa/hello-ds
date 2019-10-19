@@ -1,2 +1,2 @@
-Checks:          '-*,modernize-*,readability-*,misc-*,google-*,cppcoreguidelines-*,clang-analyzer-*,performance-*,-google-runtime-references'
+Checks:          '-*,modernize-*,readability-*,misc-*,google-*,cppcoreguidelines-*,clang-analyzer-*,performance-*,-google-runtime-references,-cppcoreguidelines-avoid-c-arrays,-modernize-avoid-c-arrays'
 FormatStyle: Google

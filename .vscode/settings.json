@@ -58,7 +58,17 @@
         "variant": "cpp",
         "gsl_*": "cpp",
         "span": "cpp",
-        "gsl": "cpp"
+        "gsl": "cpp",
+        "list": "cpp",
+        "__hash_table": "cpp",
+        "__tree": "cpp",
+        "algorithm": "cpp",
+        "filesystem": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "valarray": "cpp",
+        "__split_buffer": "cpp",
+        "random": "cpp"
     },
     "editor.tabSize": 2,
     "C_Cpp.default.cppStandard": "c++17",
