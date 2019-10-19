@@ -11,46 +11,38 @@ class List {
   using File = std::string;
 
  private:
-  int _length;
-  int _size;
+  int _length;  // len
+  int _size;    // cap
   std::unique_ptr<T[]> _elem;
 
  public:
   List();
-  // init with a length
-  explicit List(int);
-  List(std::initializer_list<T>);
+  explicit List(int);              // init with size
+  List(std::initializer_list<T>);  // init with initializer_list
+
+  // range-based loop
+  [[nodiscard]] auto begin() const -> int * { return _length > 0 ? &_elem[0] : nullptr; }
+  //! There is an array overflow that I used for the range-base for loop
+  //! should implement Iterator class instead of this
+  [[nodiscard]] auto end() const -> int * { return _length > 0 ? &_elem[_length] : nullptr; }
+
+  // cap/len stuff
   [[nodiscard]] inline auto size() const { return _size; }
-  auto operator[](uint) -> T &;
+  [[nodiscard]] inline auto length() const { return _length; }
   auto empty() -> bool;
+
+  // elements operations
+  auto operator[](uint) -> T &;
+  auto get(int) -> T &;
+  auto locate(T, std::function<bool(const T &, const T &)> &&) -> int;
+  auto prior(const T &) -> T &;
+  auto next(const T &) -> T &;
+
+  auto traverse(std::function<void(T &)> &&);
 
   auto save(File &&f);
 
   auto load(File &&f);
-
-  static auto destroy(List *L);
-
-  auto clear();
-
-  [[nodiscard]] inline auto length() const { return _length; }
-
-  auto get(int) -> T &;
-
-  auto locate(T, bool(const T &, const T &)) -> int;
-
-  auto prior(const T &) -> T &;
-
-  auto next(const T &) -> T &;
-
-  auto insertBefore(int index, T elem) -> T &;
-
-  auto remove(int index) -> T;
-
-  void forEach(void (*callback)(T &elem));
-
-  auto push(T) -> int;
-
-  auto pop() -> T;
 };
 }  // namespace Lab1
 

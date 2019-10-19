@@ -72,7 +72,7 @@ auto Lab1::List<T>::get(int index) -> T& {
 }
 
 template <typename T>
-auto Lab1::List<T>::locate(const T e, bool eq(const T& a, const T& b)) -> int {
+auto Lab1::List<T>::locate(const T e, std::function<bool(const T&, const T&)>&& eq) -> int {
   for (int i = 0; i < _length; i++) {
     if (eq(e, _elem[i])) {
       return i;
@@ -124,4 +124,22 @@ TEST_CASE("elem") {
   SECTION("prior") { REQUIRE(l.prior(s4) == s3); }
 
   SECTION("next") { REQUIRE(s3 == l.next(s2)); }
+}
+
+template <typename T>
+auto Lab1::List<T>::traverse(std::function<void(T&)>&& f) {
+  for (auto&& i : *this) {
+    f(i);
+  }
+}
+
+TEST_CASE("traversse") {
+  auto l = Lab1::List<int>{1, 2, 3, 4};
+  REQUIRE(l.length() == 4);
+  const auto times = 2;
+  l.traverse([times](int& x) { x *= times; });
+  REQUIRE(l.get(0) == 2);
+  REQUIRE(l.get(1) == 4);
+  REQUIRE(l.get(2) == 6);
+  REQUIRE(l.get(3) == 8);
 }
