@@ -1,0 +1,2 @@
+Checks:          '-*,modernize-*,readability-*,misc-*,google-*,cppcoreguidelines-*,clang-analyzer-*,performance-*,-google-runtime-references'
+FormatStyle: Google

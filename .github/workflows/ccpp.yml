@@ -1,0 +1,22 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: dep
+      env: 
+        CI: gh
+        CXX: clang++
+        CC: clang
+      run: make ci
+    - name: test
+      env:
+        CI: gh
+      run: make test
+

@@ -1,0 +1,6 @@
+[submodule "lib/gsl"]
+	path = lib/gsl
+	url = https://github.com/microsoft/gsl.git
+[submodule "lib/Catch2"]
+	path = lib/Catch2
+	url = https://github.com/catchorg/Catch2.git

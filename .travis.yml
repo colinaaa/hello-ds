@@ -1,0 +1,24 @@
+language: cpp
+
+dist: bionic
+
+install: make ci
+
+compiler:
+  - clang
+
+os:
+  - linux
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
+
+env:
+  - CI=travis
+
+script:
+  - make test
