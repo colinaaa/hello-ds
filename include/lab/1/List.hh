@@ -1,6 +1,7 @@
 #ifndef SEQLIST_H
 #define SEQLIST_H
 
+#include <initializer_list>
 #include <memory>
 #include <string>
 
@@ -12,15 +13,16 @@ class List {
  private:
   int _length;
   int _size;
-  std::unique_ptr<T[]> elem;
+  std::unique_ptr<T[]> _elem;
 
  public:
   List();
   // init with a length
   explicit List(int);
+  List(std::initializer_list<T>);
   [[nodiscard]] inline auto size() const { return _size; }
   auto operator[](uint) -> T &;
-  auto empty();
+  auto empty() -> bool;
 
   auto save(File &&f);
 
@@ -34,11 +36,11 @@ class List {
 
   auto get(int) -> T &;
 
-  auto locate(T target, bool(T &, T &)) -> int;
+  auto locate(T, bool(const T &, const T &)) -> int;
 
-  auto prior(T) -> T &;
+  auto prior(const T &) -> T &;
 
-  auto next(T) -> T &;
+  auto next(const T &) -> T &;
 
   auto insertBefore(int index, T elem) -> T &;
 
