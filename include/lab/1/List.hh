@@ -1,6 +1,7 @@
 #ifndef SEQLIST_H
 #define SEQLIST_H
 
+#include <functional>
 #include <initializer_list>
 #include <memory>
 #include <string>
@@ -11,20 +12,20 @@ class List {
   using File = std::string;
 
  private:
-  int _length;  // len
-  int _size;    // cap
+  std::size_t _length;  // len
+  std::size_t _size;    // cap
   std::unique_ptr<T[]> _elem;
 
  public:
   List();
-  explicit List(int);              // init with size
+  explicit List(std::size_t);      // init with size
   List(std::initializer_list<T>);  // init with initializer_list
 
   // range-based loop
-  [[nodiscard]] auto begin() const -> int * { return _length > 0 ? &_elem[0] : nullptr; }
+  [[nodiscard]] auto begin() const -> T * { return _length > 0 ? &_elem[0] : nullptr; }
   //! There is an array overflow that I used for the range-base for loop
   //! should implement Iterator class instead of this
-  [[nodiscard]] auto end() const -> int * { return _length > 0 ? &_elem[_length] : nullptr; }
+  [[nodiscard]] auto end() const -> T * { return _length > 0 ? &_elem[_length] : nullptr; }
 
   // cap/len stuff
   [[nodiscard]] inline auto size() const { return _size; }
@@ -32,13 +33,18 @@ class List {
   auto empty() -> bool;
 
   // elements operations
-  auto operator[](uint) -> T &;
-  auto get(int) -> T &;
-  auto locate(T, std::function<bool(const T &, const T &)> &&) -> int;
+  auto operator[](std::size_t) -> T &;
+  auto get(std::size_t) -> T &;
+  auto locate(T, std::function<bool(const T &, const T &)> &&) -> std::size_t;
   auto prior(const T &) -> T &;
   auto next(const T &) -> T &;
 
   auto traverse(std::function<void(T &)> &&);
+
+  auto resize(std::size_t);
+  auto insert(std::size_t, const T &);
+  auto remove(std::size_t, T &);
+  auto remove(std::size_t) -> T;
 
   auto save(File &&f);
 
