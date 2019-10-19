@@ -67,7 +67,7 @@
     "C_Cpp.intelliSenseEngine": "Default",
     "clangd.arguments": [
         // "-clang-tidy"
-        "--compile-commands-dir=build"
+        "--compile-commands-dir=./build"
     ],
     "clangd.path": "clangd",
     "clangd.semanticHighlighting": false
