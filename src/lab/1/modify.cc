@@ -3,8 +3,7 @@
 template <typename T>
 auto Lab1::List<T>::resize(std::size_t size) -> void {
   if (size < _size) {
-    // TODO(error): throw error
-    return;
+    throw std::length_error("resize with size" + std::to_string(size));
   }
 
   auto p = std::make_unique<T[]>(size);
@@ -18,9 +17,11 @@ auto Lab1::List<T>::resize(std::size_t size) -> void {
 }
 template <typename T>
 auto Lab1::List<T>::insert(std::size_t pos, const T& e) -> void {
-  if (pos > _size + 1 || pos < 1) {
-    // TODO(error): throw error
-    return;
+  if (pos > _size + 1) {
+    throw std::overflow_error("insert index: " + std::to_string(pos));
+  }
+  if (pos < 1) {
+    throw std::underflow_error("insert index: " + std::to_string(pos));
   }
 
   if (_length == _size) {
@@ -35,8 +36,11 @@ auto Lab1::List<T>::insert(std::size_t pos, const T& e) -> void {
 }
 template <typename T>
 auto Lab1::List<T>::remove(std::size_t index) -> T {
-  if (index < 1 || _length < index) {
-    // TODO(error): throw error
+  if (index < 1) {
+    throw std::underflow_error("remove index: " + std::to_string(index));
+  }
+  if (_length < index) {
+    throw std::overflow_error("remove index: " + std::to_string(index));
   }
   auto out = _elem[index - 1];
 
@@ -50,8 +54,11 @@ auto Lab1::List<T>::remove(std::size_t index) -> T {
 
 template <typename T>
 auto Lab1::List<T>::remove(std::size_t index, T& out) -> void {
-  if (index < 1 || _length < index) {
-    // TODO(error): throw error
+  if (index < 1) {
+    throw std::underflow_error("remove index: " + std::to_string(index));
+  }
+  if (_length < index) {
+    throw std::overflow_error("remove index: " + std::to_string(index));
     return;
   }
   out = _elem[index - 1];
