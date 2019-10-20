@@ -3,6 +3,13 @@ test: build
 	(cd build; make Test)
 	./build/test.out
 
+main: build
+	(cd build; make main)
+	./main.out
+
+all: build
+	(cd build; make all)
+
 .PHONY: dep
 dep:
 	git submodule init

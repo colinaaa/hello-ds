@@ -39,11 +39,11 @@ class List {
   auto prior(const T &) -> T &;
   auto next(const T &) -> T &;
 
-  auto traverse(std::function<void(T &)> &&);
+  auto traverse(std::function<void(T &)> &&) -> void;
 
-  auto resize(std::size_t);
-  auto insert(std::size_t, const T &);
-  auto remove(std::size_t, T &);
+  auto resize(std::size_t) -> void;
+  auto insert(std::size_t, const T &) -> void;
+  auto remove(std::size_t, T &) -> void;
   auto remove(std::size_t) -> T;
 
   auto save(File &&f);
