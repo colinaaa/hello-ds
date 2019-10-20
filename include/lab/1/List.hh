@@ -33,7 +33,7 @@ class List {
   auto empty() -> bool;
 
   // elements operations
-  auto operator[](std::size_t) -> T &;
+  auto operator[](std::size_t) noexcept(false) -> T &;
   auto get(std::size_t) -> T &;
   auto locate(T, std::function<bool(const T &, const T &)> &&) -> std::size_t;
   auto prior(const T &) -> T &;
