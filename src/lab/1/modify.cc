@@ -15,6 +15,12 @@ auto Lab1::List<T>::resize(std::size_t size) -> void {
   _elem.swap(p);
   _size = size;
 }
+
+template <typename T>
+auto Lab1::List<T>::insert(const T& e) -> void {
+  insert(_length + 1, e);
+}
+
 template <typename T>
 auto Lab1::List<T>::insert(std::size_t pos, const T& e) -> void {
   if (pos > _size + 1) {
@@ -34,6 +40,7 @@ auto Lab1::List<T>::insert(std::size_t pos, const T& e) -> void {
   _length++;
   data[pos - 1] = e;
 }
+
 template <typename T>
 auto Lab1::List<T>::remove(std::size_t index) -> T {
   if (index < 1) {

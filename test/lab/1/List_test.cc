@@ -12,7 +12,7 @@ TEST_CASE("init seq list") {
 
   SECTION("empty") {
     Lab1::List<std::string> list;
-    REQUIRE(list.size() == 0);
+    REQUIRE(list.size() == 1);
     REQUIRE(list.empty());
   }
 
@@ -20,7 +20,7 @@ TEST_CASE("init seq list") {
     const auto size = 10;
     const auto magicNumber = 1.78;
     Lab1::List<double> list(size);
-    REQUIRE(list.size() == 10);
+    REQUIRE(list.size() == size);
     for (int i = 0; i < size; i++) {
       list[i] = magicNumber;
       REQUIRE(list[i] == magicNumber);

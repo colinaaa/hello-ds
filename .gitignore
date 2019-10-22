@@ -37,3 +37,5 @@ build
 # clangd indexes
 
 .clangd
+
+node_modules

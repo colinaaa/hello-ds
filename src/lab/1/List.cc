@@ -1,10 +1,7 @@
 #include "List.hh"
-// #define CATCH_CONFIG_MAIN
-// #include<catch2/catch.hpp>
-#include <catch2/catch.hpp>
 
 template <typename T>
-Lab1::List<T>::List() : _length(0), _size(0), _elem(std::make_unique<T[]>(0)) {}
+Lab1::List<T>::List() : _length(0), _size(1), _elem(std::make_unique<T[]>(1)) {}
 
 template <typename T>
 Lab1::List<T>::List(std::size_t size)

@@ -43,12 +43,13 @@ class List {
 
   auto resize(std::size_t) -> void;
   auto insert(std::size_t, const T &) -> void;
+  auto insert(const T &) -> void;
   auto remove(std::size_t, T &) -> void;
   auto remove(std::size_t) -> T;
 
-  auto save(File &&f);
+  auto save(File &&f) -> void;
 
-  auto load(File &&f);
+  auto load(File &&f) -> void;
 };
 }  // namespace Lab1
 
