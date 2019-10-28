@@ -1,0 +1,21 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "cli for ds lab",
+  "main": "index.js",
+  "author": "colinaaa",
+  "license": "GPL-3.0",
+  "gypfile": true,
+  "scripts": {
+    "build": "node-gyp rebuild",
+    "clean": "node-gyp clean"
+  },
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "inquirer": "^7.0.0",
+    "node-addon-api": "^1.7.1"
+  },
+  "devDependencies": {
+    "node-gyp": "^6.0.0"
+  }
+}
