@@ -1,6 +1,4 @@
 [submodule "lib/Catch2"]
 	path = lib/Catch2
-	url = https://github.com/catchorg/Catch2.git
-[submodule "doc"]
-	path = doc
-	url = https://github.com/hust-latex/hustreport.git
+    url = https://github.com/catchorg/Catch2.git
+

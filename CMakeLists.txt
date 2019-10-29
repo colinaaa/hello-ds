@@ -16,7 +16,6 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi -l
 add_compile_options("-stdlib=libc++")
 endif()
 
-add_subdirectory(lib/gsl)
 add_subdirectory(lib/Catch2)
 
 
