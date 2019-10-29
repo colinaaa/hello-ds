@@ -1,0 +1,301 @@
+%%
+%% This is file `hustreport-zh-example.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% hustreport.dtx  (with options: `example-zh')
+%% 
+%% This is a generated file.
+%% 
+%% Copyright (C) 2013-2014 by Xu Cheng <xucheng@me.com>
+%%               2014-2016 by hust-latex <https://github.com/hust-latex>
+%% 
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is hust-latex Organization.
+%% 
+%% This work consists of the files hustreport.dtx,
+%% hustreport.ins and the derived file hustreport.cls
+%% along with its document and example files.
+%% 
+%% \CharacterTable
+%% {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%  Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%  Digits        \0\1\2\3\4\5\6\7\8\9
+%%  Exclamation   \!     Double quote  \"     Hash (number) \#
+%%  Dollar        \$     Percent       \%     Ampersand     \&
+%%  Acute accent  \'     Left paren    \(     Right paren   \)
+%%  Asterisk      \*     Plus          \+     Comma         \,
+%%  Minus         \-     Point         \.     Solidus       \/
+%%  Colon         \:     Semicolon     \;     Less than     \<
+%%  Equals        \=     Greater than  \>     Question mark \?
+%%  Commercial at \@     Left bracket  \[     Backslash     \\
+%%  Right bracket \]     Circumflex    \^     Underscore    \_
+%%  Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%  Right brace   \}     Tilde         \~}
+\documentclass[format=draft,language=chinese,category=academic-report]{hustreport}
+
+\stuno{U201814468}
+\title{数据结构实验报告}
+\author{王清雨}
+\major{计算机科学与技术学院}
+\department{计算机卓越工程师}
+\advisor{许贵平\hspace{1em}副教授}
+
+\abstract{
+    这这是一个\LaTeX{}模板使用实例文件，该模板用于华中科技大学研究生报告写作。
+
+    该模板基于LPPL v1.3发行。
+
+}
+\keywords{\LaTeX{}，华中科技大学，报告，模板}
+
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\makeabstract
+\tableofcontents
+\listoffigures
+\listoftables
+\mainmatter
+
+\chapter{基于线性存储结构的线性表实现}\label{chapter:1}
+
+\section{实验目的}\label{sec:1}
+通过实验达到
+\begin{itemize}
+    \item 加深对线性表的概念、基本运算的理解。
+    \item 熟练掌握线性表的逻辑结构与物理结构的关系。
+    \item 物理结构采用顺序表,熟练掌握线性表的基本运算的实现。
+    \item 通过编写完备的测试来保证代码的正确性。
+\end{itemize}
+
+\subsection{对线性表对理解}
+通过本次实验，我深刻理解了线性表的\textbf{线性}的意义，即所有元素均\textbf{线性}地排列在一起。
+\newline
+而本次实验的线性表底层是使用顺序表来实现的，在内存上，各个元素也是顺序、线性地排列在一起。
+\subsection{对基本运算的理解与实现}
+总的来说，线性表的基本运算较简单，主要的难点在插入 (\texttt{insert})元素与删除 (\texttt{delete})元素。
+因为需要对线性表的长度 (\texttt{length})，和容量 (\texttt{size})进行改变，
+还需要对线性表中的元素 (\texttt{elements})进行移动，
+如果操作不当，或者没有对用户的输入进行校验，
+可能会产生数组下溢 (\texttt{underflow})，或上溢 (\texttt{overflow})，导致程序出现错误。
+\subsection{单元测试}
+通过编写完整的单元测试，将可能出现的错误都考虑清楚，尽量实现测试覆盖率达到100\%。
+从而保证了程序在正确情况和极端情况下都能正常运行。
+
+% ------------------------------------------------------------
+
+\section{实验内容}\label{sec:2}
+\subsection{问题描述}
+\subsubsection{线性表的定义}
+线性表 (\emph{Linear List})是由$n (n \le 0)$个数据元素（结点）$a[0]，a[1]，a[2]，\dots ，a[n-1]$组成的有限序列。
+\newline
+其中:
+\begin{itemize}
+    \item 数据元素可以为任意类型，但同一线性表中元素类型必须相同。
+    \item 数据元素的个数$n$定义为表的长度 (\emph{length})，表里没有一个元素时称为空表。
+    \item 将非空的线性表 $(n \ge 1)$记作： (a[0]，a[1]，a[2]，\dots ，a[n-1])
+数据元素a[i] $(0\le i \le n-1)$只是个抽象符号，其具体含义在不同情况下可以不同
+\end{itemize}
+\subsection{系统设计}
+\subsection{系统实现}
+\section{程序设计}\label{sec:3}
+\section{实验过程}\label{sec:4}
+\subsection{设计线性表类接口}
+\subsection{实现线性表基本操作}
+\subsection{编写单元测试}
+\section{实验结果与分析}\label{sec:5}
+\section{心得体会}\label{sec:6}
+\subsection{第二层}\label{sec:2}
+\subsubsection{第三层}\label{sec:3}
+测试测试测试测试测试测试测试测试测试测试测试测试。
+\footnote{\label{footnote:1}脚注}
+
+\section{字体}
+
+普通\textbf{粗体}\emph{斜体}
+
+\hei{黑体}\kai{楷体}\fangsong{仿宋}
+
+\section{公式}
+
+单个公式，公式引用：\autoref{eq:1}。
+\begin{equation}
+ c^2 = a^2 + b^2 \label{eq:1}
+\end{equation}
+
+多个公式，公式引用：\autoref{eq:2}，\autoref{eq:3}。
+
+\begin{subequations}
+\begin{equation}
+  F = ma \label{eq:2}
+\end{equation}
+\begin{equation}
+  E = mc^2 \label{eq:3}
+\end{equation}
+\end{subequations}
+
+\section{罗列环境}
+
+\begin{enumerate}
+    \item 第一层\label{item:1}
+    \item 第一层
+    \begin{enumerate}
+        \item 第二层\label{item:2}
+        \item 第二层
+        \begin{enumerate}
+            \item 第三层\label{item:3}
+            \item 第三层
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+
+\begin{description}
+    \item[解释环境]  解释内容
+\end{description}
+
+\chapter{其他格式测试}
+
+\section{代码环境}
+
+\begin{lstlisting}[language=python]
+import os
+
+def main():
+    '''
+    doc here
+    '''
+    print 'hello, world' # Abc
+    print 'hello, 中文' # 中文
+\end{lstlisting}
+
+\section{定律证明环境}
+
+\begin{definition}\label{def:1}
+这是一个定义。
+\end{definition}
+\begin{proposition}\label{proposition:1}
+这是一个命题。
+\end{proposition}
+\begin{axiom}\label{axiom:1}
+这是一个公理。
+\end{axiom}
+\begin{lemma}\label{lemma:1}
+这是一个引理。
+\end{lemma}
+\begin{theorem}\label{theorem:1}
+这是一个定理。
+\end{theorem}
+\begin{proof}\label{proof:1}
+这是一个证明。
+\end{proof}
+
+\section{算法环境}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwData{this text}
+\KwResult{how to write algorithm with \LaTeX2e }
+initialization\;\label{alg_line:1}
+\While{not at end of this document}{
+read current\;
+\eIf{understand}{
+go to next section\;
+current section becomes this one\;
+}{
+go back to the beginning of current section\;
+}
+}
+\caption{How to write algorithms}\label{alg:1}
+\end{algorithm}
+
+\section{表格}
+表格见\autoref{tab:1}。
+
+\begin{table}[!h]
+\centering
+\caption{一个表格}\label{tab:1}
+\begin{tabular}{|c|c|}
+\hline
+a & b \\
+\hline
+c & d \\
+\hline
+\end{tabular}
+\end{table}
+\section{图片}
+图片见\autoref{fig:1}。图片格式支持eps，png，pdf等。多个图片见\autoref{fig:2}，分开引用：\autoref{fig:2-1}，\autoref{fig:2-2}。
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=.4\textwidth]{fig-example.pdf}
+\caption{一个图片}\label{fig:1}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+  \begin{subfigure}[b]{0.3\textwidth}
+  \includegraphics[width=\textwidth]{fig-example.pdf}
+  \caption{图片1}\label{fig:2-1}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.3\textwidth}
+  \includegraphics[width=\textwidth]{fig-example.pdf}
+  \caption{图片2}\label{fig:2-2}
+  \end{subfigure}
+\caption{多个图片}\label{fig:2}
+\end{figure}
+
+\section{参考文献示例}
+这是一篇中文参考文献\cite{TEXGURU99}；这是一篇英文参考文献\cite{knuth}；同时引用\cite{TEXGURU99,knuth}。
+
+\section[\textbackslash{}autoref 测试]{\texttt{\textbackslash{}autoref} 测试}
+
+\begin{description}
+  \item[公式] \autoref{eq:1}
+  \item[脚注] \autoref{footnote:1}
+  \item[项] \autoref{item:1},\autoref{item:2},\autoref{item:3}
+  \item[图] \autoref{fig:1}
+  \item[表] \autoref{tab:1}
+  \item[附录] \autoref{appendix:1}
+  \item[章] \autoref{chapter:1}
+  \item[小节] \autoref{sec:1},\autoref{sec:2},\autoref{sec:3}
+  \item[算法] \autoref{alg:1},\autoref{alg_line:1}
+  \item[证明环境] \autoref{def:1},\autoref{proposition:1},\autoref{axiom:1},\autoref{lemma:1},\autoref{theorem:1},\autoref{proof:1}
+\end{description}
+
+\backmatter
+
+\begin{ack}
+致谢正文。
+\end{ack}
+
+\bibliography{ref-example}
+
+\appendix
+
+\begin{publications}
+    \item 论文1
+    \item 论文2
+\end{publications}
+
+\chapter{这是一个附录}\label{appendix:1}
+附录正文。
+
+
+\end{document}
+\endinput
+%%
+%% End of file `hustreport-zh-example.tex'.

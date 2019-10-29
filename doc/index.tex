@@ -1,0 +1,279 @@
+%!TEX program = lualatex
+\documentclass[format=draft,language=chinese,category=academic-report]{hustreport}
+
+\stuno{U201814468}
+\title{数据结构实验报告}
+\author{王清雨}
+\major{计算机科学与技术学院}
+\department{计算机卓越工程师}
+\advisor{许贵平\hspace{1em}副教授}
+
+\abstract{
+    这这是一个\LaTeX{}模板使用实例文件，该模板用于华中科技大学研究生报告写作。
+
+    该模板基于LPPL v1.3发行。
+
+}
+\keywords{\LaTeX{}，华中科技大学，报告，模板}
+
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\makeabstract
+\tableofcontents
+\listoffigures
+\listoftables
+\mainmatter
+
+\chapter{基于线性存储结构的线性表实现}\label{chapter:1}
+
+\section{实验目的}\label{sec:1}
+通过实验达到
+\begin{itemize}
+    \item 加深对线性表的概念、基本运算的理解。
+    \item 熟练掌握线性表的逻辑结构与物理结构的关系。
+    \item 物理结构采用顺序表,熟练掌握线性表的基本运算的实现。
+    \item 通过编写完备的测试来保证代码的正确性。
+\end{itemize}
+
+\subsection{对线性表对理解}
+通过本次实验，我深刻理解了线性表的\textbf{线性}的意义，即所有元素均\textbf{线性}地排列在一起。
+\newline
+而本次实验的线性表底层是使用顺序表来实现的，在内存上，各个元素也是顺序、线性地排列在一起。
+\subsection{对基本运算的理解与实现}
+总的来说，线性表的基本运算较简单，主要的难点在插入 (\texttt{insert})元素与删除 (\texttt{delete})元素。
+因为需要对线性表的长度 (\texttt{length})，和容量 (\texttt{size})进行改变，
+还需要对线性表中的元素 (\texttt{elements})进行移动，
+如果操作不当，或者没有对用户的输入进行校验，
+可能会产生数组下溢 (\texttt{underflow})，或上溢 (\texttt{overflow})，导致程序出现错误。
+\subsection{单元测试}
+通过编写完整的单元测试，将可能出现的错误都考虑清楚，尽量实现测试覆盖率达到100\%。
+从而保证了程序在正确情况和极端情况下都能正常运行。
+
+% ------------------------------------------------------------
+
+\section{实验内容}\label{sec:2}
+\subsection{问题描述}
+\subsubsection{线性表的定义}
+\begin{definition}\label{def:linear list}
+    线性表 (\emph{Linear List})是由$n (n \le 0)$个数据元素（结点）$a[0]，a[1]，a[2]，\dots ，a[n-1]$组成的有限序列。
+\end{definition}
+其中:
+\begin{itemize}
+    \item 数据元素可以为任意类型，但同一线性表中元素类型必须相同。
+    \item 数据元素的个数$n$定义为表的长度 (\emph{length})，表里没有一个元素时称为空表。
+    \item 将非空的线性表 $(n \ge 1)$记作： (a[0]，a[1]，a[2]，\dots ，a[n-1])。\footnote{数据元素a[i] $(0\le i \le n-1)$只是个抽象符号，其具体含义在不同情况下可以不同。}
+    \item 对于非空的线性表，每一个数据元素都有其确定的位置，
+        例如$a_{0}$是第一个数据元素，$a_{n-1}$是最后一个数据元素，$a_i$是第i+1个数据元素。
+    \item 而对于每一个数据元素，除了首元素和尾元素外，均有前驱和后继。
+\end{itemize}
+\subsubsection{顺序表的定义}
+在本次实验中，采用\emph{顺序表}的形式来存储数据。
+\begin{definition}\label{def:list}
+    是指用一组\emph{地址连续}的存储单元\emph{依次}存储数据元素的线性结构。
+\end{definition}
+通过本次实验，我理解到了顺序表的精髓所在：
+通过数据元素\emph{物理}存储的相邻关系来反映数据元素之间\emph{逻辑}上的\emph{相邻关系}。
+\newline
+顺序表的存储特点是：只要确定了\emph{起始位置}，表中任一元素的地址都通过下列公式得到：
+$location(a_i) = location(a_1) + (i-1) * size 　1\le i\le n$ 其中，$size$是元素占用存储单元的长度。
+因此，顺序表可以方便地进行随机存取元素，在数据的存取上时间复杂度为$O(1)$，但于此同时，
+线性表在进行元素的插入 (\texttt{insert})，和数据的删除 (\texttt{delete})时需要移动元素，因此会有$O(n)$的复杂度。
+\subsubsection{实验需要完成的基本操作}
+\begin{enumerate}
+\item 初始化表：\texttt{InitaList(L)}，\newline \textbf{\emph{初始条件}}是线性表L不存在已存在 。\newline \textbf{\emph{操作结果}}是构造一个空的线性表。
+\item 销毁表：\texttt{DestroyList(L)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是销毁线性表L。
+\item 清空表：\texttt{ClearList(L)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是将L重置为空表。
+\item 判定空表：\texttt{ListEmpty(L)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是若L为空表则返回\textbf{TRUE}，否则返回\textbf{FALSE}。
+\item 求表长：\texttt{ListLength(L)}，\newline \textbf{\emph{初始条件}}是线性表已存在 。\newline \textbf{\emph{操作结果}}是返回L中数据元素的个数。
+\item 获得元素：\texttt{GetElem(L,i,e)}，\newline \textbf{\emph{初始条件}}是线性表已存在，1\le i\le ListLength(L) 。\newline \textbf{\emph{操作结果}}是用e返回L中第i个数据元素的值。
+\item 查找元素：\texttt{LocateElem(L,e,compare())}，\newline \textbf{\emph{初始条件}}是线性表已存在 。\newline
+    \textbf{\emph{操作结果}}是返回L中第1个与e满足关系\texttt{compare()}关系的数据元素的位序，若这样的数据元素不存在，则返回值为0。
+\item 获得前驱：\texttt{PriorElem(L,cur,pre)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是若cur是L的数据元素，且不是第一个，则用pre返回它的前驱，否则操作失败，pre无定义。
+\item 获得后继：\texttt{NextElem(L,cur,next)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是若cur是L的数据元素，且不是最后一个，则用next返回它的后继，否则操作失败，next无定义。
+\item 插入元素：\texttt{ListInsert(L,i,e)}，\newline \textbf{\emph{初始条件}}是线性表L已存在且非空，1\le i \le ListLength(L)+1 。\newline \textbf{\emph{操作结果}}是在L的第i个位置之前插入新的数据元素e。
+\item 删除元素：\texttt{ListDelete(L,i,e)}，\newline \textbf{\emph{初始条件}}是线性表L已存在且非空，1\le i\le ListLength(L) 。\newline \textbf{\emph{操作结果}}：删除L的第i个数据元素，用e返回其值。
+\item 遍历表：\texttt{ListTraverse(L,visit())}，\newline \textbf{\emph{初始条件}}是线性表L已存在，\newline \textbf{\emph{操作结果}}是依次对L的每个数据元素调用函数visit()。
+\end{enumerate}
+\subsection{系统设计}
+\subsubsection{总体设计}
+本系统采用\emph{顺序表}作为线性表的物理结构，实现线性表的基本运算。
+\par
+系统开始运行的时候默认不使用文件中的数据，但是用户随时可以将文件中的数据导入到内存中，同时提供数据保存的功能。
+\subsubsection{有关常量和类型定义}
+采取\texttt{C++}中的模版类来使线性表支持所有类型的数据，
+而底层采用\emph{数组}来存储数据元素，即\texttt{\_elem}成员，
+为防止手动管理内存而造成内存泄露的问题，
+采用\texttt{unique\_ptr}\footnote{需要C++11及以上的编译器支持}对底层的指针进行管理。
+\par
+此外，线性表类中还有两个成员变量，\texttt{\_length}和\texttt{\_size}，
+分别代表当前线性表的已有元素数量与能够存储的元素的数量。
+\par
+另外，作为封装，将\texttt{\_length, \_size, \_elem}都声明为私有成员，防止被非友元函数篡改。
+\begin{lstlisting}[language=c++]
+#include <string>
+#include <memory>
+namespace Lab1 {
+template <typename T>
+class List {
+  using File = std::string;
+ private:
+  std::size_t _length;  // len 已有元素数量
+  std::size_t _size;    // cap 能够存储的元素数量
+  std::unique_ptr<T[]> _elem;
+  // ...
+}
+}
+\end{lstlisting}
+对于程序中可能出现的错误，进行统一规定：
+\begin{enumerate}
+    \item 对于用户输入不正确导致的数组上溢，统一抛出 (\texttt{throw}) \texttt{std::overflow\_error}。
+    \item 对于用户输入不正确导致的数组下溢，统一抛出 (\texttt{throw}) \texttt{std::underflow\_error}。
+    \item 对于其他可能发生的错误，统一抛出 (\texttt{throw}) \texttt{std::runtime\_error}。
+\end{enumerate}
+\subsubsection{函数设计}
+\begin{lstlisting}[language=c++]
+namespace Lab1 {
+template <typename T>
+class List {
+  // ...
+ public:
+  List();
+  explicit List(std::size_t);      // init with size
+  List(std::initializer_list<T>);  // init with initializer_list
+  // begin() and end() implement range-based loop
+  auto begin() const -> T * { return _length > 0 ? &_elem[0] : nullptr; }
+  //! There is an array overflow that I used for the range-base for loop
+  //! should implement Iterator class instead of this
+  auto end() const -> T * { return _length > 0 ? &_elem[_length] : nullptr; }
+  inline auto size() const { return _size; }
+  inline auto length() const { return _length; }
+  auto empty() -> bool; // test whether list is empty
+  auto operator[](std::size_t) noexcept(false) -> T &; // a more common way to get and set elements
+  auto get(std::size_t) -> T &; // get() gets an element
+  auto locate(T, std::function<bool(const T &, const T &)> &&) -> std::size_t; // locate() finds an element
+  auto prior(const T &) -> T &; // prior finds the prior element
+  auto next(const T &) -> T &; // next finds the next element
+  auto traverse(std::function<void(T &)> &&) -> void;
+  auto resize(std::size_t) -> void;
+  auto insert(std::size_t, const T &) -> void; // insert an element after the index
+  auto insert(const T &) -> void; // insert an element to the tail
+  auto remove(std::size_t, T &) -> void; // remove an element from index, returning by param
+  auto remove(std::size_t) -> T; // remove an element from index returning by return value
+  auto save(File &&f) -> void; // save to file
+  auto load(File &&f) -> void; // load from file
+}
+}
+\end{lstlisting}
+\subsubsection{算法设计}
+由于大部分基本操作都较为简单，因此在这里就不一一列举。
+只给出插入 (\texttt{insert})和删除 (\texttt{delete})元素的算法设计。
+\newline
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{elem, index}
+    \KwOut{none}
+    \If{index out of range}{ throw error}
+    \If{length == size}{ resize the list }
+    \For{i=length; i\ge{index}; i++}{
+        move the i th element backword
+    }
+    length++;
+    \\
+    elements[i]=elem
+\caption{Insert}\label{alg:insert}
+\end{algorithm}
+\begin{algorithm}
+    \SetAlgoLined
+    \KwIn{index}
+    \KwOut{out}
+    \If{index out of range}{ throw error }
+    out=elements[index]
+    \\
+    \For{i=index; i < length; i++}{
+        move the i th element forward
+    }
+    length--
+\caption{Delete}\label{alg:delete}
+\end{algorithm}
+\subsection{系统实现}
+\subsubsection{开发环境}
+本次实验中使用的环境如下：
+\begin{enumerate}
+    \item 操作系统版本 Darwin X86\_64 Kernel Version 18.7.0
+    \item 编译器及其版本 clang++ version 10.0.1 (Apple LLVM version 10.0.1)
+    \item 自动编译工具 CMake version 3.15.4
+    \item 编程环境 NeoVim
+\end{enumerate}
+同时，本次实验的一部分代码是在另一环境下编写并测试通过：
+\begin{enumerate}
+    \item 操作系统及其版本：Arch Linux 5.3.7.arch1-2 (x86\_64)
+    \item 编译器及其版本 clang++ version 9.0.0
+    \item 自动编译工具 CMake version 3.15.4
+    \item 编程环境 Visual Studio Code
+\end{enumerate}
+\subsubsection{源代码}
+源代码见\autoref{appendix:lab1}，测试代码见\autoref{appendix:test1}
+\subsubsection{测试}
+本系统使用了\textit{Catch2}\footnote{url: https://github.com/catchorg/Catch2}作为测试框架，
+对所有源代码编写了\textbf{完善}的单元测试，可以做到所有边界情况和越界情况以及正常情况全部覆盖，
+同时程序中的每一个分支也都进行测试，使得测试覆盖度基本达到100\%。
+\section{实验结果与分析}\label{sec:4}
+\section{心得体会}\label{sec:5}
+
+\begin{table}[!h]
+\centering
+\caption{一个表格}\label{tab:1}
+\begin{tabular}{|c|c|}
+\hline
+a & b \\
+\hline
+c & d \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{参考文献示例}
+这是一篇中文参考文献\cite{TEXGURU99} ； 这是一篇英文参考文献\cite{knuth} ； 同时引用\cite{TEXGURU99,knuth}。
+
+\backmatter
+
+\begin{ack}
+致谢正文。
+\end{ack}
+
+\bibliography{ref-example}
+
+\appendix
+
+\chapter{实验源代码}\label{appendix:1}
+\section{文件结构}
+\lstinputlisting{../tree.dat}
+\section{实验一源代码}\label{appendix:lab1}
+\subsection{线性表实现代码}
+\emph{构造函数与初始化——List.cc}
+\lstinputlisting[language=c++]{../src/lab/1/List.cc}
+\emph{元素操作——elem.cc}
+\lstinputlisting[language=c++]{../src/lab/1/elem.cc}
+\emph{插入删除等操作——modify.cc}
+\lstinputlisting[language=c++]{../src/lab/1/modify.cc}
+\emph{文件操作——fs.cc}
+\lstinputlisting[language=c++]{../src/lab/1/fs.cc}
+\emph{CMake配置}
+\lstinputlisting{../src/lab/1/CMakeLists.txt}
+\subsection{测试代码}\label{appendix:test1}
+\emph{构造函数与初始化测试——List\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/1/List_test.cc}
+\emph{元素操作测试——elem\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/1/elem_test.cc}
+\emph{插入删除等操作测试——modify\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/1/modify_test.cc}
+\emph{文件操作测试——fs\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/1/fs_test.cc}
+
+\end{document}
+\endinput
+%%
+%% End of file `hustreport-zh-example.tex'.
