@@ -1,4 +1,5 @@
 #include "List.hh"
+#include <stdexcept>
 
 template <typename T>
 Lab1::List<T>::List() : _length(0), _size(1), _elem(std::make_unique<T[]>(1)) {}
@@ -8,6 +9,9 @@ Lab1::List<T>::List(std::size_t size)
     : _length(0), _size(size), _elem(std::make_unique<T[]>(size)) {
   // see:
   // https://stackoverflow.com/questions/21377360/proper-way-to-create-unique-ptr-that-holds-an-allocated-array
+  if(size==0){
+      throw std::underflow_error("init with index 0");
+  }
 }
 
 template <typename T>
