@@ -1,5 +1,6 @@
 %!TEX program = lualatex
 \documentclass[format=draft,language=chinese,category=academic-report]{hustreport}
+\usepackage{booktabs}
 
 \stuno{U201814468}
 \title{数据结构实验报告}
@@ -55,6 +56,11 @@
 % ------------------------------------------------------------
 
 \section{实验内容}\label{sec:2}
+    实验内容主要分为一下三个部分：
+\begin{enumerate}
+    \item 问题描述
+    \item 
+\end{enumerate}
 \subsection{问题描述}
 \subsubsection{线性表的定义}
 \begin{definition}\label{def:linear list}
@@ -185,6 +191,7 @@ class List {
     elements[i]=elem
 \caption{Insert}\label{alg:insert}
 \end{algorithm}
+插入算法如上述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
 \begin{algorithm}
     \SetAlgoLined
     \KwIn{index}
@@ -198,6 +205,8 @@ class List {
     length--
 \caption{Delete}\label{alg:delete}
 \end{algorithm}
+\newline
+删除算法如上述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
 \subsection{系统实现}
 \subsubsection{开发环境}
 本次实验中使用的环境如下：
@@ -214,12 +223,208 @@ class List {
     \item 自动编译工具 CMake version 3.15.4
     \item 编程环境 Visual Studio Code
 \end{enumerate}
-\subsubsection{源代码}
-源代码见\autoref{appendix:lab1}，测试代码见\autoref{appendix:test1}
-\subsubsection{测试}
+\subsubsection{代码结构及源代码}
+本次实验采取了模块化的编码方式，
+\footnote{具体代码结构见\autoref{appendix:structure}}
+将线性表的不同部分的功能放置在不同源文件中，
+\footnote{源代码见\autoref{appendix:lab1}，测试代码见\autoref{appendix:test1}}
+分别编译后链接，提高了代码的可维护性和编译速度，同时也更加容易编写单元测试，保证代码的正确性。
+\subsection{系统测试}
 本系统使用了\textit{Catch2}\footnote{url: https://github.com/catchorg/Catch2}作为测试框架，
 对所有源代码编写了\textbf{完善}的单元测试，可以做到所有边界情况和越界情况以及正常情况全部覆盖，
 同时程序中的每一个分支也都进行测试，使得测试覆盖度基本达到100\%。
+% Please add the following required packages to your document preamble:
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+\multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} & \multicolumn{1}{l}{测试结果} \\ \midrule
+\multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+\multicolumn{1}{c|}{正确性测试}  & 空(默认构造函数)&1&1&正确\\
+\multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+\end{tabular}
+\caption{构造函数测试}
+\label{tab:inittest}
+\end{table}
+
+\subsubsection{\texttt{empty()}函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+\multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} & \multicolumn{1}{l}{测试结果} \\ \midrule
+\multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+\multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+\end{tabular}
+\caption{\texttt{empty()}函数测试}
+\label{tab:emptytest}
+\end{table}
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+\multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} & \multicolumn{1}{l}{测试结果} \\ \midrule
+\multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+\multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+\end{tabular}
+\caption{构造函数测试}
+\label{tab:inittest}
+\end{table}
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
+        \multicolumn{1}{l}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \caption{构造函数测试}
+    \label{tab:inittest}
+\end{table}
+
+
+
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
+        \multicolumn{1}{l}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \caption{构造函数测试}
+    \label{tab:inittest}
+\end{table}
+
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
+        \multicolumn{1}{l}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \caption{构造函数测试}
+    \label{tab:inittest}
+\end{table}
+
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
+        \multicolumn{1}{l}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \caption{构造函数测试}
+    \label{tab:inittest}
+\end{table}
+
+
+
+
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
+        \multicolumn{1}{l}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \caption{构造函数测试}
+    \label{tab:inittest}
+\end{table}
+
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
+        \multicolumn{1}{l}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \caption{构造函数测试}
+    \label{tab:inittest}
+\end{table}
+
+\subsubsection{构造函数测试}
+\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\par
+\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\par
+\textbf{预计结果：}两者相等。
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
+        \multicolumn{1}{l}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \caption{构造函数测试}
+    \label{tab:inittest}
+\end{table}
+
 \section{实验结果与分析}\label{sec:4}
 \section{心得体会}\label{sec:5}
 
@@ -249,7 +454,7 @@ c & d \\
 \appendix
 
 \chapter{实验源代码}\label{appendix:1}
-\section{文件结构}
+\section{文件结构}\label{appendix:structure}
 \lstinputlisting{../tree.dat}
 \section{实验一源代码}\label{appendix:lab1}
 \subsection{线性表实现代码}
