@@ -380,7 +380,7 @@
 }{}
 
 \ifthenelse{\equal{\HUST@language}{chinese}}{
-  \hypersetup{pdfsubject={研究生{\HUST@categoryname}报告}}
+  \hypersetup{pdfsubject={课程实验{\HUST@categoryname}报告}}
 }{
   \ifthenelse{\equal{\HUST@categoryname}{}}{
     \hypersetup{pdfsubject={Postgraduate~Report}}
@@ -600,9 +600,9 @@
     \fontsize{22pt}{33.0pt}\selectfont
     \HEI
     \ifthenelse{\equal{\HUST@categoryname}{}}{
-      \ziju{8pt}{研究生（ ~\hspace{6em}~）报告}
+      %\ziju{8pt}{研究生（ ~\hspace{6em}~）报告}
     }{
-      \ziju{8pt}{研究生（ \HUST@categoryname）报告}
+      %\ziju{8pt}{研究生（ \HUST@categoryname）报告}
     }
   }
   \vskip 0.8cm
@@ -610,9 +610,9 @@
     \centering
     \fontsize{18pt}{27.0pt}\selectfont
     \ifthenelse{\equal{\HUST@title}{}}{
-      \hei{题目：~\hspace{13em}}
+      \hei{课程名称：~\hspace{13em}}
     }{
-      \hei{题目：~\HUST@title}
+      \hei{课程名称：~\HUST@title}
     }
   }
   \vfill
@@ -623,7 +623,7 @@
     \begin{tabular}{p{6em}@{\hspace{1em}}l}
       {{学}\hfill{号}} & \makebox[10em][l]{\rule[-2.0pt]{10em}{1pt}\hspace{-10em}\hfill\HUST@stuno\hfill} \\[2ex]
       {{姓}\hfill{名}} & \makebox[10em][l]{\rule[-2.0pt]{10em}{1pt}\hspace{-10em}\hfill\HUST@author\hfill} \\[2ex]
-      {{专}\hfill{业}} & \makebox[10em][l]{\rule[-2.0pt]{10em}{1pt}\hspace{-10em}\hfill\HUST@major\hfill} \\[2ex]
+        {{专}\hfill{业}\hfill{班}\hfill{级}} & \makebox[10em][l]{\rule[-2.0pt]{10em}{1pt}\hspace{-10em}\hfill\HUST@major\hfill} \\[2ex]
       {{指}\hfill{导}\hfill{教}\hfill{师}} & \makebox[10em][l]{\rule[-2.0pt]{10em}{1pt}\hspace{-10em}\hfill\HUST@advisor\hfill} \\[2ex]
       {院（系、所）} & \makebox[10em][l]{\rule[-2.0pt]{10em}{1pt}\hspace{-10em}\hfill\HUST@department\hfill}
     \end{tabular}
@@ -633,7 +633,7 @@
   \parbox[t][][t]{\textwidth}{
     \centering
     \fontsize{16pt}{24.0pt}\selectfont
-    {华中科技大学研究生院制}
+    {计算机科学技术与学院}
   }
   \end{center}
 }
