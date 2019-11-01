@@ -33,4 +33,4 @@ using [hust report](https://github.com/hust-latex/hustreport), it's under LLPL-1
 
 ## LICENSE
 
-The repo is under GPL-3.0.
+The repo is under LGPL-3.0.
