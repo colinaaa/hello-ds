@@ -1,9 +1,11 @@
-include_directories (${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/include/lab/1)
+include_directories (${CMAKE_SOURCE_DIR}/src)
+add_subdirectory(lab/1)
+add_subdirectory(lab/2)
+#aux_source_directory(lab/1 lab1Test)
+# aux_source_directory(lab/2 lab2Test)
+add_executable (Test main.cc)
 
-aux_source_directory(lab/1 lab1Test)
-add_executable (Test main.cc ${lab1Test})
-
-target_link_libraries(Test Catch2::Catch2 objlab1)
+target_link_libraries(Test Catch2::Catch2 objlab1Test objlab2Test)
 
 set_target_properties(Test 
     PROPERTIES OUTPUT_NAME 
