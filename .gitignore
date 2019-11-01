@@ -41,3 +41,8 @@ build
 node_modules
 
 .DS_Store
+
+# handin
+handin
+*.tar.gz
+*.zip
