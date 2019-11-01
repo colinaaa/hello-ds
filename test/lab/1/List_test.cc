@@ -1,6 +1,7 @@
 #include "List.hh"
 
 #include <catch2/catch.hpp>
+#include <stdexcept>
 
 TEST_CASE("init seq list") {
   SECTION("operator[]") {
@@ -25,6 +26,7 @@ TEST_CASE("init seq list") {
       list[i] = magicNumber;
       REQUIRE(list[i] == magicNumber);
     }
+    REQUIRE_THROWS_AS(Lab1::List<int>(0), std::underflow_error);
   }
 
   SECTION("init list") {
