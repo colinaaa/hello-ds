@@ -1,6 +1,9 @@
 %!TEX program = lualatex
 \documentclass[format=draft,language=chinese,category=academic-report]{hustreport}
 \usepackage{booktabs}
+%\usepackage [english]{babel}
+%\usepackage [autostyle, english = american]{csquotes}
+%\MakeOuterQuote{"}
 
 \stuno{U201814468}
 \title{数据结构实验报告}
@@ -89,7 +92,7 @@ $location(a_i) = location(a_1) + (i-1) * size 　1\le i\le n$ 其中，$size$是
 线性表在进行元素的插入 (\texttt{insert})，和数据的删除 (\texttt{delete})时需要移动元素，因此会有$O(n)$的复杂度。
 \subsubsection{实验需要完成的基本操作}
 \begin{enumerate}
-\item 初始化表：\texttt{InitaList(L)}，\newline \textbf{\emph{初始条件}}是线性表L不存在已存在 。\newline \textbf{\emph{操作结果}}是构造一个空的线性表。
+\item 初始化表：\texttt{InitList(L)}，\newline \textbf{\emph{初始条件}}是线性表L不存在已存在 。\newline \textbf{\emph{操作结果}}是构造一个空的线性表。
 \item 销毁表：\texttt{DestroyList(L)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是销毁线性表L。
 \item 清空表：\texttt{ClearList(L)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是将L重置为空表。
 \item 判定空表：\texttt{ListEmpty(L)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是若L为空表则返回\textbf{TRUE}，否则返回\textbf{FALSE}。
@@ -140,7 +143,8 @@ class List {
     \item 对于其他可能发生的错误，统一抛出 (\texttt{throw}) \texttt{std::runtime\_error}。
 \end{enumerate}
 \subsubsection{函数设计}
-\begin{lstlisting}[language=c++]
+头文件中的函数原型声明见下面的代码段
+\begin{lstlisting}[language=c++,float,floatplacement=h]
 namespace Lab1 {
 template <typename T>
 class List {
@@ -172,7 +176,30 @@ class List {
   auto load(File &&f) -> void; // load from file
 }
 }
-\end{lstlisting}
+\end{lstlisting}\label{code:header1}
+\par
+函数时间复杂度分析见\autoref{tab:timeandspace1}
+\begin{table}[h]
+\centering
+\caption{函数时间与空间复杂度分析}
+\label{tab:timeandspace1}
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+编号                          & 名称  & 函数签名 & 时间复杂度 & 空间复杂度 \\ \toprule
+    \multicolumn{1}{c|}{1}  & 初始化表 & \texttt{ InitList()} & $O(1)$ &  $O(1)$ \\
+    \multicolumn{1}{c|}{2}  & 销毁表& \texttt{ DestroyList()} & $O(1)$ &  $O(1)$ \\
+    \multicolumn{1}{c|}{3}  & 清空表& \texttt{ ClearList()} & $O(1)$ &  $O(1)$   \\
+    \multicolumn{1}{c|}{4}  & 判定空表& \texttt{ empty()} & $O(1)$ &  $O(1)$     \\
+    \multicolumn{1}{c|}{5}  & 求表长 & \texttt{ length()} & $O(1)$ &  $O(1)$     \\
+    \multicolumn{1}{c|}{6}  & 获得元素 & \texttt{ get()} & $O(1)$ &  $O(1)$      \\
+    \multicolumn{1}{c|}{7}  & 查找元素 & \texttt{ locate()} & $O(n)$ &  $O(1)$   \\
+    \multicolumn{1}{c|}{8}  & 获得前驱 & \texttt{ prior()} & $O(1)$ &  $O(1)$    \\
+    \multicolumn{1}{c|}{9}  & 获得后继 & \texttt{ next()} & $O(1)$ &  $O(1)$     \\
+    \multicolumn{1}{c|}{10}  & 插入元素 & \texttt{ insert()} & $O(n)$ &  $O(1)$  \\
+    \multicolumn{1}{c|}{11}  & 删除元素 & \texttt{ delete()} & $O(n)$ &  $O(1)$  \\
+    \multicolumn{1}{c|}{12}  & 遍历表 & \texttt{ traverse()}   & $O(n)$ & $O(1)$ \\ \bottomrule
+\end{tabular}
+\end{table}
 \subsubsection{算法设计}
 由于大部分基本操作都较为简单，因此在这里就不一一列举。
 只给出插入 (\texttt{insert})和删除 (\texttt{delete})元素的算法设计。
@@ -229,6 +256,19 @@ class List {
 将线性表的不同部分的功能放置在不同源文件中，
 \footnote{源代码见\autoref{appendix:lab1}，测试代码见\autoref{appendix:test1}}
 分别编译后链接，提高了代码的可维护性和编译速度，同时也更加容易编写单元测试，保证代码的正确性。
+\subsection{代码亮点}
+\begin{enumerate}
+        \item 所有的代码均采用\emph{Google
+            C/C++}标准代码规范以及\emph{ISOC++}委员会所推荐的\emph{CPP Core Guidelines}代码规范，同时使用\texttt{clang-format}和\texttt{clang-tidy}对代码进行格式化和规范化，符合现代化C++的规范。
+        \item 所有代码均尽可能采用更新的C++标准，以提高可维护性以及可读性。
+        \item 采用智能指针\footnote{需要C++11及以上的编译器支持}(\texttt{unique\_ptr})进行资源管理，避免了手动管理内存所可能造成的内存泄露等问题。
+        \item 所有函数及变量均采用\texttt{auto}关键字进行声明，避免了错误的类型声明以及隐式的类型转换。
+        \item 采用C++的模板类(\texttt{template})来实现线性表，体现出了线性表中能存放任何类型的元素、但同一线性表中只能存放单一类型元素的特点。
+        \item 采用\texttt{CMake}自动生成\texttt{Makefile}，从而简化了构建过程，同时能够实现跨平台编译。
+        \item 使用现代化的C++测试框架\texttt{Catch2}，简化了测试流程。
+        \item 采用TDD\footnote{Test Driven Development}的开发方式，在保证效率的情况下尽可能地提高测试覆盖度，使系统更健壮，更容易维护。
+\end{enumerate}
+
 \subsection{系统测试}
 本系统使用了\textit{Catch2}\footnote{url: https://github.com/catchorg/Catch2}作为测试框架，
 对所有源代码编写了\textbf{完善}的单元测试，可以做到所有边界情况和越界情况以及正常情况全部覆盖，
@@ -242,211 +282,264 @@ class List {
 \textbf{预计结果：}两者相等。
 \begin{table}[h]
 \centering
+\caption{构造函数测试}
 \begin{tabular}{@{}ccccc@{}}
 \toprule
-\multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} & \multicolumn{1}{l}{测试结果} \\ \midrule
+\multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} & \multicolumn{1}{c}{测试结果} \\ \midrule
 \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
 \multicolumn{1}{c|}{正确性测试}  & 空(默认构造函数)&1&1&正确\\
 \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
 \end{tabular}
-\caption{构造函数测试}
-\label{tab:inittest}
+\label{tab:inittest1}
 \end{table}
 
-\subsubsection{\texttt{empty()}函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\subsubsection{判定空表函数测试}
+\textbf{输入：}\texttt{list}变量，代表一个线性表。
 \par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\textbf{输出：}\texttt{list.empty()}，代表线性表是否为空。
 \par
-\textbf{预计结果：}两者相等。
+\textbf{预计结果：}对于空表，输出\texttt{true}，否则输出\texttt{false}。
 \begin{table}[h]
+\centering
+    \caption{\texttt{判定空表函数测试}}
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+\multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} & \multicolumn{1}{c}{测试结果} \\ \midrule
+\multicolumn{1}{c|}{正确性测试}  & 空list&true&true&正确\\
+\multicolumn{1}{c|}{正确性测试}  & 非空list&false&false&正确\\ \bottomrule
+\end{tabular}
+\label{tab:emptytest1}
+\end{table}
+
+
+\subsubsection{销毁表测试}
+\textbf{输入：}无
+\par
+\textbf{输出：}无
+\par
+\textbf{预计结果：}表被销毁
+\begin{table}[h]
+\caption{销毁表测试}
 \centering
 \begin{tabular}{@{}ccccc@{}}
 \toprule
-\multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} & \multicolumn{1}{l}{测试结果} \\ \midrule
-\multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-\multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+\multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} & \multicolumn{1}{c}{测试结果} \\ \midrule
+\multicolumn{1}{c|}{正确性测试}  & 无&表被销毁&表被销毁&正确\\ \bottomrule
 \end{tabular}
-\caption{\texttt{empty()}函数测试}
-\label{tab:emptytest}
+\label{tab:destorytest1}
 \end{table}
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+
+\subsubsection{清空表测试}
+\textbf{输入：}无
 \par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\textbf{输出：}无
 \par
-\textbf{预计结果：}两者相等。
+\textbf{预计结果：}表被清空
 \begin{table}[h]
-\centering
-\begin{tabular}{@{}ccccc@{}}
-\toprule
-\multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} & \multicolumn{1}{l}{测试结果} \\ \midrule
-\multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-\multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
-\end{tabular}
-\caption{构造函数测试}
-\label{tab:inittest}
+    \centering
+    \caption{清空表测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  &无 &表被清空&表被清空&正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:cleartest1}
 \end{table}
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+
+
+\subsubsection{求表长测试}
+\textbf{输入：}一个线性表
 \par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
+\textbf{输出：}\texttt{length}，代表线性表实际大小。
 \par
-\textbf{预计结果：}两者相等。
+\textbf{预计结果：}输出与实际表长相等。
 \begin{table}[h]
+    \centering
+    \caption{求表长测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 长为10的线性表&10&10&正确\\
+        \multicolumn{1}{c|}{正确性测试}  & 空线性表&0&0&正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:lengthtest1}
+\end{table}
+
+\subsubsection{获得元素测试}
+\textbf{输入：}\texttt{index}变量，代表想要获取元素的索引。
+\par
+\textbf{输出：}\texttt{element}，代表获得到的元素。
+\par
+\textbf{预计结果：}想要获取到的元素与实际获取的元素相等。
+\begin{table}[h]
+    \centering
+    \caption{获得元素测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 0&``aaa''&``aaa''&正确\\
+        \multicolumn{1}{c|}{正确性测试}  & 1&``bbb''&``bbb''&正确\\
+        \multicolumn{1}{c|}{正确性测试}  & 3&``ddd''&``ddd''&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 10000& std::overflow\_error& std::overflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:gettest1}
+\end{table}
+
+\subsubsection{查找元素测试}
+\textbf{输入：}\texttt{element}变量，代表想要查找的元素。
+\par
+\textbf{输出：}\texttt{index}，代表找到的元素的位置，没找到时返回-1。
+\par
+\textbf{预计结果：}与预期相等。
+\begin{table}[h]
+    \centering
+    \caption{查找元素测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & ``aaa''&0&0&正确\\
+        \multicolumn{1}{c|}{正确性测试}  & ``bbb''&1&1&正确\\
+        \multicolumn{1}{c|}{正确性测试}  & ``magic''&-1&-1&正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:locatetest1}
+\end{table}
+
+
+\subsubsection{获得前驱测试}
+\textbf{输入：}\texttt{element}变量，代表想要搜索的位置。
+\par
+\textbf{输出：}\texttt{out}变量，代表搜索到的前驱元素。
+\par
+\textbf{预计结果：}搜到的元素与预期相等。
+\begin{table}[h]
+    \centering
+    \caption{获得前驱测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & ``ddd''&``ccc''&``ccc''&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & ``aaa''& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:priortest1}
+\end{table}
+
+\subsubsection{获得后继测试}
+\textbf{输入：}\texttt{element}变量，代表想要搜索的位置。
+\par
+\textbf{输出：}\texttt{out}变量，代表搜索到的前驱元素。
+\par
+\textbf{预计结果：}搜到的元素与预期相等。
+\begin{table}[h]
+    \centering
+    \caption{获得后继测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & ``ccc ''&``ddd ''&``ddd ''&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::overflow\_error& std::overflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:nexttest1}
+\end{table}
+
+\subsubsection{插入元素测试}
+\textbf{输入：}\texttt{(index, element)}变量，代表要插入的位置和要插入的元素。
+\par
+\textbf{输出：}\texttt{(length, element)}，代表线性表插入后的长度和插入位置的元素。
+\par
+\textbf{预计结果：}两者对应相等。
+\begin{table}[h]
+    \centering
+    \caption{插入元素测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & (1, ``sss '')（从头插入）&(length+1, ``sss'')&(length+1, ``sss'')&正确\\
+        \multicolumn{1}{c|}{正确性测试}  & (length, `` sss '')（从尾部插入）&(length+1, ``sss'')&(length+1, ``sss'')&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 100& std::overflow\_error& std::overflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:inserttest1}
+\end{table}
+
+\subsubsection{删除元素测试}
+\textbf{输入：}\texttt{index}变量，代表要删除的位置。
+\par
+\textbf{输出：}\texttt{(length, element)}，代表线性表删除后的长度和删除后该位置的元素。
+\par
+\textbf{预计结果：}两者对应相等。
+\begin{table}[h]
+    \centering
+    \caption{删除元素测试}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 1（从头删除）&(length-1, ``bbb'')&(length-1, ``bbb'')&正确\\
+        \multicolumn{1}{c|}{正确性测试}  & (length, `` bbb'')（从尾部删除）&(length-1, ``bbb'')&(length-1, ``bbb'')&正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\
+        \multicolumn{1}{c|}{错误处理测试} & 100& std::overflow\_error& std::overflow\_error& 正确\\ \bottomrule
+    \end{tabular}
+    \label{tab:deletetest1}
+\end{table}
+
+
+\subsubsection{遍历表测试}
+\textbf{输入：}\texttt{visit}变量，代表要遍历执行的函数。
+\par
+\textbf{输出：}\texttt{list}变量，代表新的list线性表。
+\par
+\textbf{预计结果：}两者对应相等。
+\begin{table}[h]
+    \caption{遍历表测试}
     \centering
     \begin{tabular}{@{}ccccc@{}}
         \toprule
-        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
-        \multicolumn{1}{l}{测试结果} \\ \midrule
-        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
+        \multicolumn{1}{c}{测试类型}    & \multicolumn{1}{c}{测试输入} & \multicolumn{1}{c}{理论输出} & \multicolumn{1}{c}{实际输出} &
+        \multicolumn{1}{c}{测试结果} \\ \midrule
+        \multicolumn{1}{c|}{正确性测试}  & 将每个元素乘2&(2,4,6,8)&(2,4,6,8)&正确\\ \bottomrule
     \end{tabular}
-    \caption{构造函数测试}
-    \label{tab:inittest}
+    \label{tab:traversetest1}
 \end{table}
 
-
-
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
+\subsubsection{测试小结}
+所有测试均通过，并且绝大部分的边界条件也都覆盖到了。可以认为程序中不存在逻辑错误，
+了所有基本功能，并且能够执行文件操作，同时也可以在客户端进行多表操作。
 \par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
-\par
-\textbf{预计结果：}两者相等。
-\begin{table}[h]
-    \centering
-    \begin{tabular}{@{}ccccc@{}}
-        \toprule
-        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
-        \multicolumn{1}{l}{测试结果} \\ \midrule
-        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
-    \end{tabular}
-    \caption{构造函数测试}
-    \label{tab:inittest}
-\end{table}
-
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
-\par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
-\par
-\textbf{预计结果：}两者相等。
-\begin{table}[h]
-    \centering
-    \begin{tabular}{@{}ccccc@{}}
-        \toprule
-        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
-        \multicolumn{1}{l}{测试结果} \\ \midrule
-        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
-    \end{tabular}
-    \caption{构造函数测试}
-    \label{tab:inittest}
-\end{table}
-
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
-\par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
-\par
-\textbf{预计结果：}两者相等。
-\begin{table}[h]
-    \centering
-    \begin{tabular}{@{}ccccc@{}}
-        \toprule
-        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
-        \multicolumn{1}{l}{测试结果} \\ \midrule
-        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
-    \end{tabular}
-    \caption{构造函数测试}
-    \label{tab:inittest}
-\end{table}
-
-
-
-
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
-\par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
-\par
-\textbf{预计结果：}两者相等。
-\begin{table}[h]
-    \centering
-    \begin{tabular}{@{}ccccc@{}}
-        \toprule
-        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
-        \multicolumn{1}{l}{测试结果} \\ \midrule
-        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
-    \end{tabular}
-    \caption{构造函数测试}
-    \label{tab:inittest}
-\end{table}
-
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
-\par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
-\par
-\textbf{预计结果：}两者相等。
-\begin{table}[h]
-    \centering
-    \begin{tabular}{@{}ccccc@{}}
-        \toprule
-        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
-        \multicolumn{1}{l}{测试结果} \\ \midrule
-        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
-    \end{tabular}
-    \caption{构造函数测试}
-    \label{tab:inittest}
-\end{table}
-
-\subsubsection{构造函数测试}
-\textbf{输入：}\texttt{size}变量，代表创建的线性表大小。
-\par
-\textbf{输出：}\texttt{list.size()}，代表线性表实际大小。
-\par
-\textbf{预计结果：}两者相等。
-\begin{table}[h]
-    \centering
-    \begin{tabular}{@{}ccccc@{}}
-        \toprule
-        \multicolumn{1}{l}{测试类型}    & \multicolumn{1}{l}{测试输入} & \multicolumn{1}{l}{理论输出} & \multicolumn{1}{l}{实际输出} &
-        \multicolumn{1}{l}{测试结果} \\ \midrule
-        \multicolumn{1}{c|}{正确性测试}  & 10&10&10&正确\\
-        \multicolumn{1}{c|}{错误处理测试} & 0& std::underflow\_error& std::underflow\_error& 正确\\ \bottomrule
-    \end{tabular}
-    \caption{构造函数测试}
-    \label{tab:inittest}
-\end{table}
+通过测试，证明了系统实现的完整性和正确性，确保了系统的良好运行。
 
 \section{实验结果与分析}\label{sec:4}
-\section{心得体会}\label{sec:5}
-
-\begin{table}[!h]
-\centering
-\caption{一个表格}\label{tab:1}
-\begin{tabular}{|c|c|}
-\hline
-a & b \\
-\hline
-c & d \\
-\hline
-\end{tabular}
-\end{table}
-
-\section{参考文献示例}
-这是一篇中文参考文献\cite{TEXGURU99} ； 这是一篇英文参考文献\cite{knuth} ； 同时引用\cite{TEXGURU99,knuth}。
+本次实验加深了对线性表的概念、基本运算的理解，
+掌握了线性表的基本运算的实现。
+深刻理解了线性表的\emph{逻辑结构}和\emph{物理结构}之间的关系。
+\par
+作为第一次实验，本次实验的内容还是相对比较简单的，通过整个编程过程，我又熟悉了一遍顺序结构的线性表，对原先的知识进行了一次很好的复习。
+\par 整个实验均在\texttt{UNIX}环境下编程(先是ArchLinux，后是macOS)，
+所有的代码均采用\emph{Google C/C++}标准代码规范，
+通过\texttt{clang-format}和\texttt{clang-tidy}进行格式化和规范化。
+\par
+同时，在编码过程中，我尽可能地使用了更加现代化的C++代码，例如使用智能指针(\textit{unique\_ptr})来进行资源管理，从而避免了手动管理内存而可能带来的内存泄漏等问题、
+例如使用\texttt{auto}关键字来声明函数与变量，从而减少了错误的类型声明或不正确的隐式类型转换。
+使得代码可读性更高，更容易维护，更加健壮。这样的规范和编码习惯有助于以后在工作中更高效地完成工作任务。
+\par
+本系统完整的实现了课程要求的全部功能，并且实现了多线性表管理和文件存储功能，
+系统健壮性良好，可以应对各种情况的输入，且能输出相应的错误提示。
+系统测试覆盖度接近100\%，可以认为不会发生逻辑错误
+\par
+今后的学习过程中，应当多从数据结构的角度分析如何进行数据的处理、存储以方便问题的解决，并 要勤加练习达到熟能生巧的地步。
 
 \backmatter
 
 \begin{ack}
-致谢正文。
+    感谢老师、助教和同学在本次实验中的对我的帮助，特别是许老师和助教许学长，在实验中为我提供了很多建议。
+    \par
+    在此衷心地对他们表示感谢！
 \end{ack}
 
 \bibliography{ref-example}
