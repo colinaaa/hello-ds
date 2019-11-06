@@ -17,6 +17,7 @@ class Node {
  public:
   Node();
   explicit Node(T);
+  Node(T, std::unique_ptr<Node<T>>&&);
   auto next() -> Node<T>*;
   auto data() -> T&;
 };
