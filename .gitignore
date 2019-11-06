@@ -46,3 +46,6 @@ node_modules
 handin
 *.tar.gz
 *.zip
+
+# tag
+tags
