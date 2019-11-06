@@ -1,6 +1,4 @@
-#include "1/List.cc"
-#include "1/elem.cc"
-#include "1/fs.cc"
-#include "1/modify.cc"
+#include "lab/2/List.cc"
+#include "lab/2/Node.cc"
 
-template class Lab1::List<std::string>;
+template class Lab2::List<int>;
