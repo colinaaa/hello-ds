@@ -8,6 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_library(libc++ REQUIRED)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined -g -O1")
+
 if(DEFINED ENV{CI})
 include_directories(SYSTEM /usr/include/c++/8)
 else()

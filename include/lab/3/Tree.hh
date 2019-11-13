@@ -3,6 +3,7 @@
 //
 #include <functional>
 #include <queue>
+#include <string>
 #include "Node.hh"
 
 #ifndef HELLO_DS_TREE_HH
@@ -11,12 +12,27 @@ namespace Lab3 {
 template <typename T>
 class Tree {
  private:
+  enum class InsertPlace { Left, Right };
+
+ public:
+  static inline auto Left() { return InsertPlace::Left; }
+  static inline auto Right() { return InsertPlace::Right; }
+
+ private:
   std::size_t _length;
   std::unique_ptr<Node<T>> _root;
 
  public:
   inline auto root() { return _root.get(); }
   inline auto length() { return _length; }
+  inline auto empty() { return _length == 0; }
+  inline auto clear() {
+    // may got stack overflow here, see:
+    // https://stackoverflow.com/questions/35535312/stack-overflow-with-unique-ptr-linked-list
+    _root.reset();
+    _length = 0;
+  }
+  auto depth() -> std::size_t;
 
  public:
   Tree() : _length(0), _root(nullptr){};
@@ -50,6 +66,14 @@ class Tree {
   auto preOrderTraverse(std::function<void(T)>) -> void;
   auto inOrderTraverse(std::function<void(T)>) -> void;
   auto postOrderTraverse(std::function<void(T)>) -> void;
+  auto levelOrderTraverse(std::function<void(T)>) -> void;
+  auto levelOrderTraverse(std::function<void(Node<T>*)>) -> void;
+
+ public:
+  auto locate(int) -> Node<T>*;
+  auto operator[](std::size_t) -> Node<T>*;
+  auto insert(T, int, InsertPlace) -> Node<T>*;
+  auto remove(int) -> void;
 };
 
 }  // namespace Lab3

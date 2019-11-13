@@ -8,7 +8,3 @@ add_executable (Test main.cc)
 
 target_link_libraries(Test Catch2::Catch2 objlab1Test objlab2Test objlab3Test)
 
-set_target_properties(Test 
-    PROPERTIES OUTPUT_NAME 
-    "${CMAKE_SOURCE_DIR}/build/test.out"
-)
