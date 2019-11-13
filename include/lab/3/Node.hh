@@ -1,6 +1,7 @@
 //
 // Created by 王清雨 on 2019/11/12.
 //
+#include <functional>
 #include <memory>
 #ifndef HELLO_DS_NODE_HH
 #define HELLO_DS_NODE_HH
@@ -33,6 +34,11 @@ class Node {
   auto insertRight() -> void;
   auto insertLeft(T) -> void;
   auto insertRight(T) -> void;
+
+ public:
+  auto preOrder(std::function<void(T)>) -> void;
+  auto inOrder(std::function<void(T)>) -> void;
+  auto postOrder(std::function<void(T)>) -> void;
 };
 }  // namespace Lab3
 

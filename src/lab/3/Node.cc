@@ -32,3 +32,35 @@ template <typename T>
 auto Lab3::Node<T>::insertRight() -> void {
   return insertRight(T{});
 }
+
+template <typename T>
+auto Lab3::Node<T>::preOrder(std::function<void(T)> f) -> void {
+  f(data());
+  if (left() != nullptr) {
+    left()->preOrder(f);
+  }
+  if (right() != nullptr) {
+    right()->preOrder(f);
+  }
+}
+template <typename T>
+auto Lab3::Node<T>::inOrder(std::function<void(T)> f) -> void {
+  if (left() != nullptr) {
+    left()->inOrder(f);
+  }
+  f(data());
+  if (right() != nullptr) {
+    right()->inOrder(f);
+  }
+}
+
+template <typename T>
+auto Lab3::Node<T>::postOrder(std::function<void(T)> f) -> void {
+  if (left() != nullptr) {
+    left()->postOrder(f);
+  }
+  if (right() != nullptr) {
+    right()->postOrder(f);
+  }
+  f(data());
+}
