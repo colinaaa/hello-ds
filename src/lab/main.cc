@@ -31,7 +31,7 @@ void print_menu(void) {
       )table";
 }
 
-int main(void) {
+int main() {
   // a variable to save the function choose
   int function_choose = 0xff;
 
@@ -41,10 +41,10 @@ int main(void) {
     scanf("%d", &function_choose);
 
     // some variable to save the parameters
-    int id;
-    int elem;
-    int index;
-    int out;
+    int id = 0;
+    int elem = 0;
+    int index = 0;
+    int out = 0;
     const auto n = 10;
     std::vector<Lab2::List<int>> lists(n);
     try {
@@ -114,6 +114,7 @@ int main(void) {
           std::cin >> id;
           auto em = lists[id].empty();
           std::cout << (em ? "Yes" : "NO") << std::endl;
+          break;
         }
         case 5:
           printf("/*\n");

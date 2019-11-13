@@ -1,7 +1,6 @@
 #include "List.hh"
 
 #include <catch2/catch.hpp>
-#include <iostream>
 #include <stdexcept>
 #include <string>
 
