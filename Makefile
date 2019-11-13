@@ -1,11 +1,11 @@
 .PHONY: test
 test: build
 	(cd build; make Test)
-	./build/test.out
+	./build/test/Test
 
 main: build
 	(cd build; make main)
-	./main.out
+	./build/main.out
 
 all: build
 	(cd build; make all)
