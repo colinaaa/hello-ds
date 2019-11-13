@@ -1,5 +1,6 @@
 add_subdirectory(1)
 add_subdirectory(2)
+add_subdirectory(3)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/include/lab)
 include_directories(${CMAKE_SOURCE_DIR}/include/lab/2)

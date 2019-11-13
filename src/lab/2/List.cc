@@ -22,7 +22,7 @@ auto Lab2::List<T>::operator==(const List<T>& rhs) const -> bool {
   if (length() != rhs.length()) {
     return false;
   }
-  for (std::size_t i; i < _length; i++) {
+  for (std::size_t i = 1; i <= _length; i++) {
     if (get(i) != rhs.get(i)) {
       return false;
     }
@@ -30,3 +30,4 @@ auto Lab2::List<T>::operator==(const List<T>& rhs) const -> bool {
   return true;
 }
 
+auto add(int a, int b) { return a + b; }
