@@ -31,7 +31,7 @@ cmake-build-cov:
 	mkdir cmake-build-cov;
 
 valgrind: cmake-build-valgrind dep
-	cd cmake-build-valgrind; cmake -DCMAKE_BUILD_TYPE=Valgrind ../; make all
+	cd cmake-build-valgrind; cmake -DCMAKE_BUILD_TYPE=Valgrind ../; make all && ./test/Test
 
 cmake-build-valgrind:
 	mkdir cmake-build-valgrind

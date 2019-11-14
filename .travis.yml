@@ -37,5 +37,5 @@ deploy:
 
 after_success:
   - lcov --list cov.info # debug info
-  - coveralls --gcov llvm-cov -i src --gcov-options 'gcov -lp'
+  - coveralls --gcov llvm-cov -i src -i include -i test --gcov-options 'gcov -lp'
   - bash <(curl -s https://codecov.io/bash) -f cov.info || echo "Codecov did not collect coverage reports"

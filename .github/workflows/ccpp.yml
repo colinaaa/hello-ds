@@ -14,23 +14,16 @@ jobs:
         CI: gh
         CXX: clang++
         CC: clang
-      run: make dep && sudo apt-get update && sudo apt-get install lcov
+      run: make dep
     - name: main
       env:
         CI: gh
         CXX: clang++
         CC: clang
       run: make main
-    - name: cov
+    - name: valgrind
       env:
         CI: gh
         CXX: clang++
         CC: clang
-      run: make cov
-    - name: info
-      run: make cov.info
-    - name: Coveralls GitHub Action
-      uses: coverallsapp/github-action@v1.0.1
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./cov.info
+      run: make valgrind
