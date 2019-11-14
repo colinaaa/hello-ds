@@ -28,7 +28,7 @@ ci: dep build debug
 
 .PHONY: debug
 debug: build dep
-    cd build; cmake -DCMAKE_BUILD_TYPE=Debug ../
+	cd build; cmake -DCMAKE_BUILD_TYPE=Debug ../
 
 build:
 	mkdir build

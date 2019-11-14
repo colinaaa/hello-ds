@@ -22,7 +22,7 @@ deploy:
   provider: releases
   api_key:
     secure: Bu2RvbPBFlldqtet2pLbIg+MJ+Guq62HfH4o6ALExsTmB6aYaTGJOkP5JW38VyVcYz8Uiepc6B8MsXzZ0lzAZ7OZdh7ZY5YDYIPEqMm16PF2XPxLBgoUK6jsNlxFO+mEVHX5xy7VMXc10sV3gfyhSDVfxe4YStzv7/M8wLIDqqEcVxlrbQ7ObR8rySpdnRu18vv+NjcKlM7CXqYJJgatKKauA2cAKNsORrWIkH+ytvZKdilbeqXYri1Mbfis9bMH9SaFkDTBABRybWcM+F+i/RXhlew62FnnVnau44GtqixyTupuC4sYfzV5gfVOfYlLZYqZYz7OEnB5jeX5myd8j2TdcHrF3aQyMxzevXoLDwWtwKtVdwkMFAiSIIZtKpUcRelZdZpnBD/T+GrQ3Tqqx6SFHgye2B4YK8hbVprQVjMdBAw2kFCnca0k6OidYod7Bm6rO8l5amnON6kFMpuGu9BsYZ/QZrckU/0p2PwZVGuL3niL6GT1mdCkoD6UKpx2endtO4kt92uwQFRIx+CItN9LG6mKUGccsyv/KVEdvOznCZZfxr3pgh4uOjyvCEK+Tez0mFnIzWxQqoEaAgZBBJW4cUk7ZlI2cl8dOkB01jL1OsNdAMb3x9zvctMrq9GZWvq4fUK6HOUyASj4IU3UeQV8k3LaoeN8PRcTAIVqkMU=
-  file: "./build/test.out"
+  file: "./build/test/Test"
   cleanup: true
   draft: true
   on:
