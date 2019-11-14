@@ -49,4 +49,4 @@ ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 cov.info: cmake-build-cov
 	chmod +x ./cov.sh
 	lcov --capture --gcov-tool $(ROOT_DIR)/cov.sh --output-file cov.info --no-external --directory ./cmake-build-cov/ --base-directory ./
-	lcov --remove --gcov-tool $(ROOT_DIR)/cov.sh cov.info -o cov.info "$(ROOT_DIR)/lib/*"
+	lcov --remove cov.info -o cov.info "$(ROOT_DIR)/lib/*"
