@@ -19,8 +19,9 @@ env:
   matrix:
   - CI=travis
 script:
-- make test
-- make main
+  - make dep
+  - make debug
+  - make cov
 
 deploy:
   provider: releases
@@ -33,4 +34,4 @@ deploy:
     tags: true
 
 after_success:
-  - coveralls -i src -i test -b cmake-build-cov
+  - coveralls -i src --gcov-options '\-rlp'

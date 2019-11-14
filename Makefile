@@ -23,17 +23,29 @@ ci: dep build debug cov valgrind
 debug: build dep
 	cd build; cmake -DCMAKE_BUILD_TYPE=Debug ../ ; make Test
 
-cov: build-cov dep
-	cd cmake-build-cov; cmake -DCMAKE_BUILD_TYPE=Cov ../; make all
+cov: cmake-build-cov dep
+	cd cmake-build-cov; cmake -DCMAKE_BUILD_TYPE=Coverage ../; make Test
+	./cmake-build-cov/test/Test
 
-build-cov:
+cmake-build-cov:
 	mkdir cmake-build-cov;
 
-valgrind: build-valgrind dep
+valgrind: cmake-build-valgrind dep
 	cd cmake-build-valgrind; cmake -DCMAKE_BUILD_TYPE=Valgrind ../; make all
 
-build-valgrind:
+cmake-build-valgrind:
 	mkdir cmake-build-valgrind
 
 build:
 	mkdir build
+
+clean: cmake-build-cov cmake-build-valgrind build
+	rm -rf cmake-build-*
+	rm -rf build*
+
+# see: https://stackoverflow.com/questions/18136918/how-to-get-current-relative-directory-of-your-makefile
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
+cov.info: cmake-build-cov
+	lcov --capture --output-file cov.info --no-external --directory ./cmake-build-cov/ --base-directory ./
+	lcov --remove cov.info -o cov.info "$(ROOT_DIR)/lib/*"
