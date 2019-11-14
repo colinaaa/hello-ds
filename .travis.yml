@@ -1,6 +1,6 @@
 language: cpp
 dist: bionic
-install: make ci
+install: make dep
 compiler:
 - clang
 os:
@@ -11,6 +11,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - cmake
+    - lcov
 
 before_install:
   - pip install --user cpp-coveralls
@@ -22,6 +23,7 @@ script:
   - make dep
   - make debug
   - make cov
+  - make cov.info
 
 deploy:
   provider: releases
@@ -34,4 +36,6 @@ deploy:
     tags: true
 
 after_success:
-  - coveralls -i src --gcov-options '\-rlp'
+  - lcov --list cov.info # debug info
+  - coveralls --gcov llvm-cov -i src --gcov-options 'gcov -lp'
+  - bash <(curl -s https://codecov.io/bash) -f cov.info || echo "Codecov did not collect coverage reports"

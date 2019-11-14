@@ -47,5 +47,6 @@ clean: cmake-build-cov cmake-build-valgrind build
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 cov.info: cmake-build-cov
-	lcov --capture --output-file cov.info --no-external --directory ./cmake-build-cov/ --base-directory ./
-	lcov --remove cov.info -o cov.info "$(ROOT_DIR)/lib/*"
+	chmod +x ./cov.sh
+	lcov --capture --gcov-tool $(ROOT_DIR)/cov.sh --output-file cov.info --no-external --directory ./cmake-build-cov/ --base-directory ./
+	lcov --remove --gcov-tool $(ROOT_DIR)/cov.sh cov.info -o cov.info "$(ROOT_DIR)/lib/*"
