@@ -11,6 +11,10 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - cmake
+
+before_install:
+  - pip install --user cpp-coveralls
+
 env:
   matrix:
   - CI=travis
@@ -27,3 +31,6 @@ deploy:
   draft: true
   on:
     tags: true
+
+after_success:
+  - coveralls -i src -i test -b cmake-build-cov
