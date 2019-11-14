@@ -5,7 +5,6 @@ test: build
 
 main: build
 	(cd build; make main)
-	./build/main.out
 
 all: build
 	(cd build; make all)
@@ -25,7 +24,11 @@ cmake: dep build
 	cd build; cmake ../
 
 .PHONY: ci
-ci: dep build cmake
+ci: dep build debug
+
+.PHONY: debug
+debug: build dep
+    cd build; cmake -DCMAKE_BUILD_TYPE=Debug ../
 
 build:
 	mkdir build
