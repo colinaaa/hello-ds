@@ -4,8 +4,6 @@
 
 #include "Tree.hh"
 
-#include <stdexcept>
-
 template <typename T>
 auto Lab3::Tree<T>::preOrderTraverse(std::function<void(T)> f) -> void {
   if (root() == nullptr) {
@@ -57,9 +55,6 @@ auto Lab3::Tree<T>::levelOrderTraverse(std::function<void(Node<T>*)> f) -> void 
 
 template <typename T>
 auto Lab3::Tree<T>::locate(int num) -> Lab3::Node<T>* {
-  if (num > _length) {
-    throw std::overflow_error("overflow: locate, index: " + std::to_string(num));
-  }
   Node<T>* out = nullptr;
   levelOrderTraverse([&num, &out](Node<T>* node) -> void {
     if (node->_key == num) {
@@ -84,10 +79,9 @@ auto Lab3::Tree<T>::insert(T data, int key, InsertPlace lr) -> Node<T>* {
   if (lr == InsertPlace::Left) {
     node->insertLeft(data);
     return node->left();
-  } else {
-    node->insertRight(data);
-    return node->right();
   }
+  node->insertRight(data);
+  return node->right();
 }
 
 template <typename T>
@@ -122,7 +116,6 @@ auto Lab3::Tree<T>::remove(const int key) -> void {
     }
   });
 }
-
 template <typename T>
 Lab3::Tree<T>::Tree(const std::array<std::vector<T>, 2>& def) : _length(0), _root(nullptr) {
   const auto& [post, in] = def;
@@ -135,31 +128,48 @@ Lab3::Tree<T>::Tree(const std::array<std::vector<T>, 2>& def) : _length(0), _roo
   for (int i = 0; i < _length; ++i) {
     cache.insert({post[i], {i, -1}});
   }
-  try {
-    for (int j = 0; j < _length; ++j) {
-      auto& item = cache.at(in[j]);
-      item.second = j;
-    }
-  } catch (std::out_of_range& e) {
-    throw std::runtime_error("two definition has different key");
-  }
-  auto postOrderIndex = [&cache](T x) { return cache.at(x).first; };
-  auto inOrderIndex = [&cache](T x) { return cache.at(x).second; };
 
-  auto rootIt = post.crbegin();
-  auto rootIndex = inOrderIndex(*rootIt);
-  auto lChildIndex = inOrderIndex(*(rootIt++));
-  if (lChildIndex > rootIndex) {
+  for (int j = 0; j < _length; ++j) {
+    auto& item = cache.at(in[j]);
+    item.second = j;
+  }
+  auto index = [&cache](T x, bool first) { return first ? cache.at(x).first : cache.at(x).second; };
+  auto rootNode = makeSubTree(in, post, index, 0, _length - 1, 0, _length - 1);
+  _root.swap(rootNode);
+}
+
+// full of shits that I even could not understand
+template <typename T>
+auto Lab3::Tree<T>::makeSubTree(const std::vector<T>& in, const std::vector<T>& post,
+                                std::function<int(T, bool)> index, int inBegin, int inEnd,
+                                int postBegin, int postEnd) -> std::unique_ptr<Node<T>> {
+  if (inBegin == inEnd) {
+    return std::make_unique<Node<T>>(in[inBegin], inBegin);
+  }
+  // first(true) -> post , second(false) -> in;
+  auto root = post[postEnd];
+  std::unique_ptr<Node<T>> left = nullptr;
+  std::unique_ptr<Node<T>> right = nullptr;
+  auto rootIndex = index(root, false);  // in
+  if (rootIndex != inEnd) {
     // has right child
-    root()->right()->makeSubTree();
-  } else {
-    // no right child
-    root()->left()->makeSubTree();
+    auto rInBegin = rootIndex + 1;
+    auto length = inEnd - rInBegin + 1;
+    auto rightChild = makeSubTree(in, post, index, rInBegin, inEnd, postEnd - length, postEnd - 1);
+    auto rootNode = std::make_unique<Node<T>>(root, rootIndex);
+    rootNode.get()->_right = std::move(rightChild);
+    if (rootIndex == inBegin) {
+      // no left child
+      return std::move(rootNode);
+    }
+    auto leftChild =
+        makeSubTree(in, post, index, inBegin, rootIndex - 1, postBegin, postEnd - 1 - length);
+    rootNode.get()->_left = std::move(leftChild);
+    return std::move(rootNode);
   }
-
-  _root = std::make_unique<Node<T>>(*rootIt, _length - 1);
-  auto lBegin = in.cbegin();
-  auto lEnd = lBegin + (rootIndex - 1);
-  auto rBegin = lBegin + (rootIndex + 1);
-  auto rEnd = in.crend();
+  // no right child
+  auto child = makeSubTree(in, post, index, inBegin, rootIndex - 1, postBegin, postEnd - 1);
+  auto rootNode = std::make_unique<Node<T>>(root, rootIndex);
+  rootNode.get()->_left = std::move(child);
+  return std::move(rootNode);
 }

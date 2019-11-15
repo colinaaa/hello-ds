@@ -3,9 +3,11 @@
 //
 #include <array>
 #include <functional>
+#include <memory>
 #include <queue>
 #include <string>
 #include <unordered_map>
+
 #include "Node.hh"
 
 #ifndef HELLO_DS_TREE_HH
@@ -82,6 +84,8 @@ class Tree {
   auto operator[](std::size_t) -> Node<T>*;
   auto insert(T, int, InsertPlace) -> Node<T>*;
   auto remove(int) -> void;
+  auto makeSubTree(const std::vector<T>&, const std::vector<T>&, std::function<int(T, bool)>, int,
+                   int, int, int) -> std::unique_ptr<Node<T>>;
 };
 
 }  // namespace Lab3

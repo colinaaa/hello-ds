@@ -48,7 +48,6 @@ class Node {
 
  public:
   auto remove(std::function<void(std::unique_ptr<Node<T>>)>) -> void;
-  auto makeSubTree(){};
 };
 }  // namespace Lab3
 
