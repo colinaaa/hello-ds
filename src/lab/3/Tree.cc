@@ -4,12 +4,14 @@
 
 #include "Tree.hh"
 
+#include <stdexcept>
+
 template <typename T>
 auto Lab3::Tree<T>::preOrderTraverse(std::function<void(T)> f) -> void {
   if (root() == nullptr) {
     throw std::runtime_error("preOrder: root == nullptr");
   }
-  return root()->preOrder(f);
+  root()->preOrder(f);
 }
 
 template <typename T>
@@ -17,7 +19,7 @@ auto Lab3::Tree<T>::inOrderTraverse(std::function<void(T)> f) -> void {
   if (root() == nullptr) {
     throw std::runtime_error("inOrder: root == nullptr");
   }
-  return root()->inOrder(f);
+  root()->inOrder(f);
 }
 
 template <typename T>
@@ -25,7 +27,7 @@ auto Lab3::Tree<T>::postOrderTraverse(std::function<void(T)> f) -> void {
   if (root() == nullptr) {
     throw std::runtime_error("inOrder: root == nullptr");
   }
-  return root()->postOrder(f);
+  root()->postOrder(f);
 }
 
 template <typename T>
@@ -35,6 +37,9 @@ auto Lab3::Tree<T>::levelOrderTraverse(std::function<void(T)> f) -> void {
 
 template <typename T>
 auto Lab3::Tree<T>::levelOrderTraverse(std::function<void(Node<T>*)> f) -> void {
+  if (root() == nullptr) {
+    throw std::runtime_error("root == nullptr: level traverse");
+  }
   std::queue<Node<T>*> q;
   q.push(root());
   while (!q.empty()) {
@@ -116,4 +121,45 @@ auto Lab3::Tree<T>::remove(const int key) -> void {
       return;
     }
   });
+}
+
+template <typename T>
+Lab3::Tree<T>::Tree(const std::array<std::vector<T>, 2>& def) : _length(0), _root(nullptr) {
+  const auto& [post, in] = def;
+  if (post.size() != in.size()) {
+    throw std::runtime_error("two definition size not equal");
+  }
+  _length = post.size();
+  // setup cache
+  auto cache = std::unordered_map<T, std::pair<int, int>>(_length);
+  for (int i = 0; i < _length; ++i) {
+    cache.insert({post[i], {i, -1}});
+  }
+  try {
+    for (int j = 0; j < _length; ++j) {
+      auto& item = cache.at(in[j]);
+      item.second = j;
+    }
+  } catch (std::out_of_range& e) {
+    throw std::runtime_error("two definition has different key");
+  }
+  auto postOrderIndex = [&cache](T x) { return cache.at(x).first; };
+  auto inOrderIndex = [&cache](T x) { return cache.at(x).second; };
+
+  auto rootIt = post.crbegin();
+  auto rootIndex = inOrderIndex(*rootIt);
+  auto lChildIndex = inOrderIndex(*(rootIt++));
+  if (lChildIndex > rootIndex) {
+    // has right child
+    root()->right()->makeSubTree();
+  } else {
+    // no right child
+    root()->left()->makeSubTree();
+  }
+
+  _root = std::make_unique<Node<T>>(*rootIt, _length - 1);
+  auto lBegin = in.cbegin();
+  auto lEnd = lBegin + (rootIndex - 1);
+  auto rBegin = lBegin + (rootIndex + 1);
+  auto rEnd = in.crend();
 }

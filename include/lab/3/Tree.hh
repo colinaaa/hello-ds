@@ -1,9 +1,11 @@
 //
 // Created by 王清雨 on 2019/11/12.
 //
+#include <array>
 #include <functional>
 #include <queue>
 #include <string>
+#include <unordered_map>
 #include "Node.hh"
 
 #ifndef HELLO_DS_TREE_HH
@@ -61,6 +63,12 @@ class Tree {
       }
     }
   };
+
+ private:
+  const char Blank = '@';
+
+ public:
+  explicit Tree(const std::array<std::vector<T>, 2>&);
 
  public:
   auto preOrderTraverse(std::function<void(T)>) -> void;

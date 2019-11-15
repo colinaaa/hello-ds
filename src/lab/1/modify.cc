@@ -66,7 +66,6 @@ auto Lab1::List<T>::remove(std::size_t index, T& out) -> void {
   }
   if (_length < index) {
     throw std::overflow_error("remove index: " + std::to_string(index));
-    return;
   }
   out = _elem[index - 1];
 

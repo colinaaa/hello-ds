@@ -4,13 +4,16 @@
 
 #include "Tree.hh"
 #include <catch2/catch.hpp>
-TEST_CASE("tree") {
+TEST_CASE("Lab3/init", "[Lab3, Tree]") {
   Lab3::Tree<int> t{
       1, 2, 3, 4, 10, 5, 6, 7,
   };
   REQUIRE(t.length() == 8);
   REQUIRE(t.depth() == 4);
-  SECTION("init list") {
+  SECTION("with init list") {
+    Lab3::Tree<std::string> emptyList{};
+    REQUIRE(emptyList.empty());
+
     Lab3::Tree<int> tree{1, 2, 23, 4};
     REQUIRE(tree.length() == 4);
     REQUIRE(tree.root()->data() == 1);
@@ -21,6 +24,25 @@ TEST_CASE("tree") {
     REQUIRE(tree.root()->left()->right() == nullptr);
   }
 
+  SECTION("with post&in order") { std::vector post{""}; }
+
+  SECTION("empty") {
+    Lab3::Tree<int> tree{1, 2, 3, 46, 7, 5, 4, 3, 2, 45, 100, 6, 74, 3, 3};
+    REQUIRE(!tree.empty());
+    tree.clear();
+    REQUIRE(tree.empty());
+    REQUIRE(tree.depth() == 0);
+
+    REQUIRE_THROWS_AS(tree.preOrderTraverse([](int x) {}), std::runtime_error);
+    REQUIRE_THROWS_AS(tree.inOrderTraverse([](int x) {}), std::runtime_error);
+    REQUIRE_THROWS_AS(tree.postOrderTraverse([](int x) {}), std::runtime_error);
+    REQUIRE_THROWS_AS(tree.levelOrderTraverse([](int x) {}), std::runtime_error);
+  }
+}
+TEST_CASE("Lab3/traverse", "[Lab3, Tree]") {
+  Lab3::Tree<int> t{
+      1, 2, 3, 4, 10, 5, 6, 7,
+  };
   SECTION("pre order") {
     std::vector<int> res;
     t.preOrderTraverse([&res](int a) { res.push_back(a); });
@@ -55,12 +77,14 @@ TEST_CASE("Lab3/locate", "[Lab3, Tree]") {
 
   for (std::size_t i = 1; i < t.length() + 1; ++i) {
     REQUIRE(t.locate(i)->data() == i);
+    REQUIRE(t[i]->data() == i);
   }
 }
 
 TEST_CASE("Lab3/insert", "[Lab3, Tree]") {
   Lab3::Tree<int> t{1, 2, 3, 4, 5, 6, 7, 8};
   REQUIRE(t.length() == 8);
+  REQUIRE_THROWS_AS(t.insert(100000, 1000000, Lab3::Tree<int>::Right()), std::runtime_error);
 
   SECTION("to right") {
     auto r = t.insert(999, 4, Lab3::Tree<int>::Right());
