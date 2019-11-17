@@ -30,8 +30,8 @@ TEST_CASE("Lab3/init", "[Lab3, Tree]") {
   SECTION("with post&in order") {
     std::string inDef = "BAGHDCFE";
     std::string postDef = "BHGDFECA";
-    auto post = std::vector(postDef.begin(), postDef.end());
-    auto in = std::vector(inDef.begin(), inDef.end());
+    auto post = std::vector<char>(postDef.begin(), postDef.end());
+    auto in = std::vector<char>(inDef.begin(), inDef.end());
 
     Lab3::Tree<char> tree({post, in});
     REQUIRE(tree.length() == 8);
@@ -41,21 +41,22 @@ TEST_CASE("Lab3/init", "[Lab3, Tree]") {
     std::string answer = "ABCDEGFH";
 
     tree.levelOrderTraverse([&res](char x) { res.push_back(x); });
-    REQUIRE(res == std::vector(answer.begin(), answer.end()));
+    REQUIRE(res == std::vector<char>(answer.begin(), answer.end()));
     res.clear();
     answer = "ABCDGHEF";
     tree.preOrderTraverse([&res](char x) { res.push_back(x); });
-    REQUIRE(res == std::vector(answer.begin(), answer.end()));
+    REQUIRE(res == std::vector<char>(answer.begin(), answer.end()));
 
     std::string bullshit = "balalla";
     std::string longBullshit = "datlalaskjdfll";
     std::string sameLengthBullshit = "zzzzzzz";
-    REQUIRE_THROWS_AS(Lab3::Tree<char>({std::vector(bullshit.begin(), bullshit.end()),
-                                        std::vector(longBullshit.begin(), longBullshit.end())}),
-                      std::runtime_error);
     REQUIRE_THROWS_AS(
-        Lab3::Tree<char>({std::vector(bullshit.begin(), bullshit.end()),
-                          std::vector(sameLengthBullshit.begin(), sameLengthBullshit.end())}),
+        Lab3::Tree<char>({std::vector<char>(bullshit.begin(), bullshit.end()),
+                          std::vector<char>(longBullshit.begin(), longBullshit.end())}),
+        std::runtime_error);
+    REQUIRE_THROWS_AS(
+        Lab3::Tree<char>({std::vector<char>(bullshit.begin(), bullshit.end()),
+                          std::vector<char>(sameLengthBullshit.begin(), sameLengthBullshit.end())}),
         std::out_of_range);
   }
 
@@ -161,7 +162,7 @@ TEST_CASE("Lab3/remove", "[Lab3, Tree]") {
     std::string post = "ABCDE";
     std::string in = "EDCBA";
     Lab3::Tree<char> tree(
-        {std::vector(post.begin(), post.end()), std::vector(in.begin(), in.end())});
+        {std::vector<char>(post.begin(), post.end()), std::vector<char>(in.begin(), in.end())});
     REQUIRE(tree.length() == 5);
     REQUIRE(tree.depth() == 5);
     tree.remove(3);
@@ -170,7 +171,7 @@ TEST_CASE("Lab3/remove", "[Lab3, Tree]") {
     std::vector<char> res;
     tree.levelOrderTraverse([&res](char x) { res.push_back(x); });
     auto answer = std::string{"EDCA"};
-    REQUIRE(res == std::vector(answer.begin(), answer.end()));
+    REQUIRE(res == std::vector<char>(answer.begin(), answer.end()));
   }
 
   SECTION("delete from middle with only left child") {
@@ -178,7 +179,7 @@ TEST_CASE("Lab3/remove", "[Lab3, Tree]") {
     std::string in = "EDCBA";
 
     Lab3::Tree<char> tree(
-        {std::vector(post.begin(), post.end()), std::vector(in.begin(), in.end())});
+        {std::vector<char>(post.begin(), post.end()), std::vector<char>(in.begin(), in.end())});
     tree.remove(3);
     REQUIRE(tree.length() == 4);
     REQUIRE(tree.depth() == 4);
@@ -186,7 +187,7 @@ TEST_CASE("Lab3/remove", "[Lab3, Tree]") {
     auto answer = std::string{"ACDE"};
     tree.levelOrderTraverse([&res](char x) { res.push_back(x); });
 
-    REQUIRE(res == std::vector(answer.begin(), answer.end()));
+    REQUIRE(res == std::vector<char>(answer.begin(), answer.end()));
 
     Lab3::Tree<int> fancyTree({std::vector{1, 2, 3, 4, 5, 6}, {6, 5, 4, 3, 2, 1}});
   }

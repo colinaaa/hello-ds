@@ -16,7 +16,7 @@ auto Lab2::List<T>::get(std::size_t index) -> T& {
 }
 
 template <typename T>
-auto Lab2::List<T>::get(std::size_t index) const -> T {
+auto Lab2::List<T>::get(std::size_t index) const -> const T& {
   if (index == 0) {
     throw std::underflow_error("get underflow, index: " + std::to_string(index));
   }

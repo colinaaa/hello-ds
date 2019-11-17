@@ -35,7 +35,7 @@ class List {
 
   // elements operations
   auto get(std::size_t) -> T &;
-  auto get(std::size_t) const -> T;
+  auto get(std::size_t) const -> const T &;
   auto locate(T, std::function<bool(const T &, const T &)> &&) -> std::size_t;
   auto prior(const T &) -> T &;
   auto next(const T &) -> T &;
