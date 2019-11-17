@@ -29,10 +29,11 @@
     实验内容主要分为一下三个部分：
 \begin{enumerate}
     \item 问题描述
-    \item 
+    \item 系统设计
+    \item 系统实现
 \end{enumerate}
-\subsection{问题描述}
-\subsubsection{线性表的定义}
+\section{问题描述}
+\subsection{线性表的定义}
 \begin{definition}\label{def:linear list}
     线性表 (\emph{Linear List})是由$n (n \le 0)$个数据元素（结点）$a[0]，a[1]，a[2]，\dots ，a[n-1]$组成的有限序列。
 \end{definition}
@@ -45,7 +46,7 @@
         例如$a_{0}$是第一个数据元素，$a_{n-1}$是最后一个数据元素，$a_i$是第i+1个数据元素。
     \item 而对于每一个数据元素，除了首元素和尾元素外，均有前驱和后继。
 \end{itemize}
-\subsubsection{顺序表的定义}
+\subsection{顺序表的定义}
 在本次实验中，采用\emph{顺序表}的形式来存储数据。
 \begin{definition}\label{def:list}
     是指用一组\emph{地址连续}的存储单元\emph{依次}存储数据元素的线性结构。
@@ -57,7 +58,7 @@
 $location(a_i) = location(a_1) + (i-1) * size 　1\le i\le n$ 其中，$size$是元素占用存储单元的长度。
 因此，顺序表可以方便地进行随机存取元素，在数据的存取上时间复杂度为$O(1)$，但于此同时，
 线性表在进行元素的插入 (\texttt{insert})，和数据的删除 (\texttt{delete})时需要移动元素，因此会有$O(n)$的复杂度。
-\subsubsection{实验需要完成的基本操作}
+\subsection{实验需要完成的基本操作}
 \begin{enumerate}
 \item 初始化表：\texttt{InitList(L)}，\newline \textbf{\emph{初始条件}}是线性表L不存在已存在 。\newline \textbf{\emph{操作结果}}是构造一个空的线性表。
 \item 销毁表：\texttt{DestroyList(L)}，\newline \textbf{\emph{初始条件}}是线性表L已存在 。\newline \textbf{\emph{操作结果}}是销毁线性表L。
@@ -73,12 +74,12 @@ $location(a_i) = location(a_1) + (i-1) * size 　1\le i\le n$ 其中，$size$是
 \item 删除元素：\texttt{ListDelete(L,i,e)}，\newline \textbf{\emph{初始条件}}是线性表L已存在且非空，1\le i\le ListLength(L) 。\newline \textbf{\emph{操作结果}}：删除L的第i个数据元素，用e返回其值。
 \item 遍历表：\texttt{ListTraverse(L,visit())}，\newline \textbf{\emph{初始条件}}是线性表L已存在，\newline \textbf{\emph{操作结果}}是依次对L的每个数据元素调用函数visit()。
 \end{enumerate}
-\subsection{系统设计}
-\subsubsection{总体设计}
+\section{系统设计}
+\subsection{总体设计}
 本系统采用\emph{顺序表}作为线性表的物理结构，实现线性表的基本运算。
 \par
 系统开始运行的时候默认不使用文件中的数据，但是用户随时可以将文件中的数据导入到内存中，同时提供数据保存的功能。
-\subsubsection{有关常量和类型定义}
+\subsection{有关常量和类型定义}
 采取\texttt{C++}中的模版类来使线性表支持所有类型的数据，
 而底层采用\emph{数组}来存储数据元素，即\texttt{\_elem}成员，
 为防止手动管理内存而造成内存泄露的问题，
@@ -109,7 +110,7 @@ class List {
     \item 对于用户输入不正确导致的数组下溢，统一抛出 (\texttt{throw}) \texttt{std::underflow\_error}。
     \item 对于其他可能发生的错误，统一抛出 (\texttt{throw}) \texttt{std::runtime\_error}。
 \end{enumerate}
-\subsubsection{函数设计}
+\subsection{函数设计}
 头文件中的函数原型声明见下面的代码段
 \begin{lstlisting}[language=c++,float,floatplacement=h]
 namespace Lab1 {
@@ -167,7 +168,7 @@ class List {
     \multicolumn{1}{c|}{12}  & 遍历表 & \texttt{ traverse()}   & $O(n)$ & $O(1)$ \\ \bottomrule
 \end{tabular}
 \end{table}
-\subsubsection{算法设计}
+\subsection{算法设计}
 由于大部分基本操作都较为简单，因此在这里就不一一列举。
 只给出插入 (\texttt{insert})和删除 (\texttt{delete})元素的算法设计。
 \newline
@@ -201,8 +202,8 @@ class List {
 \end{algorithm}
 \newline
 删除算法如上述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
-\subsection{系统实现}
-\subsubsection{开发环境}
+\section{系统实现}
+\subsection{开发环境}
 本次实验中使用的环境如下：
 \begin{enumerate}
     \item 操作系统版本 Darwin X86\_64 Kernel Version 18.7.0
@@ -217,7 +218,7 @@ class List {
     \item 自动编译工具 CMake version 3.15.4
     \item 编程环境 Visual Studio Code
 \end{enumerate}
-\subsubsection{代码结构及源代码}
+\subsection{代码结构及源代码}
 本次实验采取了模块化的编码方式，
 \footnote{具体代码结构见\autoref{appendix:structure}}
 将线性表的不同部分的功能放置在不同源文件中，

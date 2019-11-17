@@ -841,7 +841,7 @@
   \def\thudot{\unskip.}
   \def\thumasterbib{[Master Thesis]}
   \def\thuphdbib{[Doctor Thesis]}
-  \bibliographystyle{thuthesis}
+  \bibliographystyle{thuthesis-bachelor}
 }{
   \bibliographystyle{IEEEtran}
 }

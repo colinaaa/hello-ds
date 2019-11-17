@@ -4,7 +4,6 @@
 %\usepackage [english]{babel}
 %\usepackage [autostyle, english = american]{csquotes}
 %\MakeOuterQuote{"}
-
 \stuno{U201814468}
 \title{数据结构实验}
 \author{王清雨}
@@ -38,9 +37,11 @@
     感谢老师、助教和同学在本次实验中的对我的帮助，特别是许老师和助教许学长，在实验中为我提供了很多建议。
     \par
     在此衷心地对他们表示感谢！
+    \par
+    特别感谢教材\cite{严蔚敏2002数据结构}与习题册\cite{严蔚敏1998数据结构题集}对我的帮助
 \end{ack}
 
-\bibliography{ref-example}
+\bibliography{book}
 
 \appendix
 
@@ -69,7 +70,24 @@
 \emph{文件操作测试——fs\_test.cc}
 \lstinputlisting[language=c++]{../test/lab/1/fs_test.cc}
 
+\section{实验二源代码}\label{appendix:lab2}
+\subsection{线性表实现代码}
+\emph{节点构造函数与初始化——Node.cc}
+\lstinputlisting[language=c++]{../src/lab/2/Node.cc}
+\emph{线性表构造函数与初始化——List.cc}
+\lstinputlisting[language=c++]{../src/lab/2/List.cc}
+\emph{元素操作——elem.cc}
+\lstinputlisting[language=c++]{../src/lab/2/elem.cc}
+\emph{插入删除等操作——modify.cc}
+\lstinputlisting[language=c++]{../src/lab/2/modify.cc}
+\emph{CMake配置}
+\lstinputlisting{../src/lab/2/CMakeLists.txt}
+\subsection{测试代码}\label{appendix:test2}
+\emph{节点构造函数与初始化测试——Node\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/2/Node_test.cc}
+\emph{线性表构造函数与初始化测试——List\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/2/List_test.cc}
+
 \end{document}
 \endinput
 %%
-%% End of file `hustreport-zh-example.tex'.
