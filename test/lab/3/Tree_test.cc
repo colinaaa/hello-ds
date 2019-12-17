@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <vector>
 TEST_CASE("Lab3/init", "[Lab3, Tree]") {
+  Lab3::Tree<int> empty{std::initializer_list<int>{}};
   Lab3::Tree<int> t{
       1, 2, 3, 4, 10, 5, 6, 7,
   };
@@ -134,6 +135,7 @@ TEST_CASE("Lab3/insert", "[Lab3, Tree]") {
 
   SECTION("to left") {
     auto r = t.insert(10000, 5, Lab3::Tree<int>::Left());
+//    REQUIRE_THROWS_AS(t.insert(100,5,Lab3::Tree<int>::Left()),std::runtime_error);
     REQUIRE(t.length() == 9);
     REQUIRE(r->data() == 10000);
     REQUIRE(r->left() == nullptr);

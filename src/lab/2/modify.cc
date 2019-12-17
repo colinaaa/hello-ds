@@ -52,4 +52,5 @@ auto Lab2::List<T>::remove(std::size_t index) -> T {
 template <typename T>
 auto Lab2::List<T>::clear() noexcept -> void {
   _first = nullptr;
+  _length=0;
 }

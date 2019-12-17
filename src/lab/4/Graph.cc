@@ -8,12 +8,6 @@
 #include <stdexcept>
 #include <string>
 
-template <typename T>
-Lab4::Graph<T>::Graph(std::initializer_list<Node<T>> iList) : _list(std::vector<Node<T>>()) {
-  for (auto&& i : iList) {
-    _list.push_back(i);
-  }
-}
 
 template <typename T>
 Lab4::Graph<T>::Graph(std::initializer_list<T> iList) : _list(std::vector<Node<T>>()) {
@@ -21,12 +15,6 @@ Lab4::Graph<T>::Graph(std::initializer_list<T> iList) : _list(std::vector<Node<T
     _list.emplace_back(i);
   }
 }
-
-template <typename T>
-auto Lab4::Graph<T>::addNode(Node<T> n) -> void {
-  _list.push_back(std::move(n));
-}
-
 template <typename T>
 auto Lab4::Graph<T>::addNode(T data) -> void {
   _list.emplace_back(data);
@@ -92,7 +80,9 @@ auto Lab4::Graph<T>::remove(std::size_t i) -> void {
   for (auto&& node : _list) {
     auto it = std::find_if(node._arc.cbegin(), node._arc.cend(),
                            [i](const Arc a) { return a.to() == i; });
-    node._arc.erase(it);
+    if(it!=node._arc.cend()){
+      node._arc.erase(it);
+    }
   }
   _list.erase(_list.begin() + i);
 }

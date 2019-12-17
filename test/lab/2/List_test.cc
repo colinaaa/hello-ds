@@ -10,10 +10,12 @@ TEST_CASE("List") {
   REQUIRE(list.length() == 0);
 
   SECTION("with init list") {
-    Lab2::List list{1, 2, 3, 4};
-    REQUIRE(list.length() == 4);
+    Lab2::List list2{1, 2, 3, 4};
+    REQUIRE_FALSE(list==list2);
+    REQUIRE_FALSE(list2==Lab2::List{4,3,2,1});
+    REQUIRE(list2.length() == 4);
     for (int i = 1; i < 5; i++) {
-      REQUIRE(list.get(i) == i);
+      REQUIRE(list2.get(i) == i);
     }
   }
 }
@@ -32,12 +34,16 @@ TEST_CASE("insert") {
     list.insert(1, 999);
     // {1, 999, 2, 3}
     REQUIRE(list.length() == 4);
+    REQUIRE_THROWS_AS(list.get(0),std::underflow_error);
+    REQUIRE_THROWS_AS(list.get(1000),std::overflow_error);
     REQUIRE(list.get(1) == 1);
     REQUIRE(list.get(2) == 999);
     REQUIRE(list.get(3) == 2);
     REQUIRE(list.get(4) == 3);
     Lab2::List<int> list2{1, 999, 2, 3};
     REQUIRE(list == list2);
+    list.insert(2,777);
+    REQUIRE(list.length()==5);
   }
 }
 
@@ -48,6 +54,9 @@ TEST_CASE("get") {
 
   REQUIRE(list.length() == 4);
   REQUIRE(list.get(2) == 9);
+  const Lab2::List cList{1,2,3,4,5};
+  REQUIRE_THROWS_AS(cList.get(0),std::underflow_error);
+  REQUIRE_THROWS_AS(cList.get(19999),std::overflow_error);
 }
 
 TEST_CASE("locate") {
@@ -98,6 +107,8 @@ TEST_CASE("remove") {
   REQUIRE(list.length() == 4);
   // remove from head
   list.remove(1);
+  REQUIRE_THROWS_AS(list.remove(0),std::underflow_error);
+  REQUIRE_THROWS_AS(list.remove(9999),std::overflow_error);
   // {"bbb", "ccc", "ddd"}
   REQUIRE(list.length() == 3);
   const Lab2::List<std::string> result{"bbb", "ccc", "ddd"};
@@ -107,4 +118,7 @@ TEST_CASE("remove") {
   list.remove(list.length());
   const Lab2::List<std::string> result2{"bbb", "ccc"};
   REQUIRE(list == result2);
+
+  list.clear();
+  REQUIRE(list.empty()==true);
 }

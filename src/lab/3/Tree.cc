@@ -194,38 +194,3 @@ auto Lab3::Tree<T>::makeSubTree(const std::vector<T>& in, const std::vector<T>& 
   rootNode.get()->_left = std::move(child);
   return std::move(rootNode);
 }
-
-template <typename T>
-auto Lab3::Tree<T>::preAndIn(const std::vector<T>& in, const std::vector<T>& pre,
-                             std::function<int(T, bool)> index, int inBegin, int inEnd,
-                             int preBegin, int preEnd) -> std::unique_ptr<Node<T>> {
-  if (inBegin == inEnd) {
-    return std::make_unique<Node<T>>(in[inBegin], inBegin);
-  }
-  // first(true) -> pre , second(false) -> in;
-  auto root = pre[preEnd];
-  std::unique_ptr<Node<T>> left = nullptr;
-  std::unique_ptr<Node<T>> right = nullptr;
-  auto rootIndex = index(root, false);  // in
-  if (rootIndex != inEnd) {
-    // has right child
-    auto rInBegin = rootIndex + 1;
-    auto length = inEnd - rInBegin + 1;
-    auto rightChild = makeSubTree(in, pre, index, rInBegin, inEnd, preEnd - length, preEnd - 1);
-    auto rootNode = std::make_unique<Node<T>>(root, rootIndex);
-    rootNode.get()->_right = std::move(rightChild);
-    if (rootIndex == inBegin) {
-      // no left child
-      return std::move(rootNode);
-    }
-    auto leftChild =
-        makeSubTree(in, pre, index, inBegin, rootIndex - 1, preBegin, preEnd - 1 - length);
-    rootNode.get()->_left = std::move(leftChild);
-    return std::move(rootNode);
-  }
-  // no right child
-  auto child = makeSubTree(in, pre, index, inBegin, rootIndex - 1, preBegin, preEnd - 1);
-  auto rootNode = std::make_unique<Node<T>>(root, rootIndex);
-  rootNode.get()->_left = std::move(child);
-  return std::move(rootNode);
-}

@@ -41,6 +41,8 @@ TEST_CASE("Graph") {
     g.addNode(5);
     g.addArc(0, 2);
     g.addArc(0, 3);
+    REQUIRE_THROWS_AS(g.addArc(1000,3),std::overflow_error);
+    REQUIRE_THROWS_AS(g.firstVex(1000),std::overflow_error);
     REQUIRE(g.at(0).aNum() == 3);
     REQUIRE(g.nextVex(0, 2) == 4);
     REQUIRE_THROWS_AS(g.nextVex(1, 100), std::range_error);
@@ -58,6 +60,11 @@ TEST_CASE("Graph") {
     REQUIRE(g.firstVex(1) == 1);
     g.removeArc(1, 2);
     REQUIRE_THROWS_AS(g.firstVex(0), std::runtime_error);
+    g.remove(std::size_t(2));
+    REQUIRE(g.vNum()==3);
+    g.remove(1);
+    REQUIRE(g.vNum()==2);
+    REQUIRE_THROWS_AS(g.remove(std::size_t(99999)),std::overflow_error);
   }
 
   SECTION("search") {
@@ -73,10 +80,12 @@ TEST_CASE("Graph") {
     std::vector<int> res2;
     g.dfs([&res2](Lab4::Node<int>& n) { res2.push_back(n.data()); });
     REQUIRE(res2 == std::vector{1, 4, 3, 5, 2});
+    REQUIRE_THROWS_AS(Lab4::Graph<int>{}.dfs([](Lab4::Node<int>&n){}),std::range_error);
   }
 }
 
 TEST_CASE("Node4") {
   Lab4::Node<int> n(1);
   Lab4::Node<int> n2{2};
+  REQUIRE_THROWS_AS(Lab4::Node<int>{std::initializer_list<int>{}},std::underflow_error);
 }

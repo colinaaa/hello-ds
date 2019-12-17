@@ -27,6 +27,19 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi -l
 add_compile_options("-stdlib=libc++")
 endif()
 
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
+    add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
+    message("compile with clang")
+    add_link_options(-fprofile-instr-generate)
+    #Uncomment in case of linker errors
+    #link_libraries(clang_rt.profile-x86_64)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_compile_options(--coverage)
+    #Uncomment in case of linker errors
+    #link_libraries(gcov)
+endif ()
+
+
 add_subdirectory(lib/Catch2)
 
 

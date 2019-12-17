@@ -17,6 +17,8 @@ TEST_CASE("elem") {
     REQUIRE(l.get(3) == s4);
     REQUIRE_THROWS_AS(l.get(10), std::overflow_error);
     REQUIRE_THROWS_AS(l.get(-1), std::overflow_error);
+    REQUIRE_THROWS_AS(l[-1], std::overflow_error);
+
   }
 
   SECTION("locate") {
@@ -28,10 +30,12 @@ TEST_CASE("elem") {
   SECTION("prior") {
     REQUIRE_THROWS_AS(l.prior(s1), std::underflow_error);
     REQUIRE(l.prior(s4) == s3);
+    REQUIRE_THROWS_AS(l.prior("sss"),std::runtime_error);
   }
 
   SECTION("next") {
     REQUIRE_THROWS_AS(l.next(s5), std::overflow_error);
+    REQUIRE_THROWS_AS(l.next("sss"),std::runtime_error);
     REQUIRE(s3 == l.next(s2));
   }
 }

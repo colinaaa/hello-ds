@@ -30,4 +30,3 @@ auto Lab2::List<T>::operator==(const List<T>& rhs) const -> bool {
   return true;
 }
 
-auto add(int a, int b) { return a + b; }
