@@ -46,6 +46,9 @@ TEST_CASE("Lab3/init", "[Lab3, Tree]") {
     answer = "ABCDGHEF";
     tree.preOrderTraverse([&res](char x) { res.push_back(x); });
     REQUIRE(res == std::vector<char>(answer.begin(), answer.end()));
+    res.clear();
+    tree.preOrderTraverse([&res](char x) { res.push_back(x); }, false);
+    REQUIRE(res == std::vector<char>(answer.begin(), answer.end()));
 
     std::string bullshit = "balalla";
     std::string longBullshit = "datlalaskjdfll";

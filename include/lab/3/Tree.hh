@@ -23,8 +23,8 @@ class Tree {
   static inline auto Right() { return InsertPlace::Right; }
 
  private:
-  std::size_t _length;
-  std::unique_ptr<Node<T>> _root;
+  std::size_t _length{};
+  std::unique_ptr<Node<T>> _root{nullptr};
 
  public:
   inline auto root() { return _root.get(); }
@@ -39,7 +39,7 @@ class Tree {
   auto depth() -> std::size_t;
 
  public:
-  Tree() : _length(0), _root(nullptr){};
+  Tree() : _root(nullptr){};
   Tree(std::initializer_list<T> iList) : _length(iList.size()), _root(std::make_unique<Node<T>>()) {
     if (_length == 0) {
       return;
@@ -74,6 +74,7 @@ class Tree {
 
  public:
   auto preOrderTraverse(std::function<void(T)>) -> void;
+  auto preOrderTraverse(std::function<void(T)>, bool) -> void;
   auto inOrderTraverse(std::function<void(T)>) -> void;
   auto postOrderTraverse(std::function<void(T)>) -> void;
   auto levelOrderTraverse(std::function<void(T)>) -> void;
@@ -86,6 +87,8 @@ class Tree {
   auto remove(int) -> void;
   auto makeSubTree(const std::vector<T>&, const std::vector<T>&, std::function<int(T, bool)>, int,
                    int, int, int) -> std::unique_ptr<Node<T>>;
+  auto preAndIn(const std::vector<T>&, const std::vector<T>&, std::function<int(T, bool)>, int, int,
+                int, int) -> std::unique_ptr<Node<T>>;
 };
 
 }  // namespace Lab3

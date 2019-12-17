@@ -4,6 +4,9 @@
 
 #include "Node.hh"
 
+#include <functional>
+#include <stack>
+
 template <typename T>
 auto Lab3::Node<T>::insertLeft(T data) -> void {
   if (_left != nullptr) {
@@ -69,16 +72,13 @@ auto Lab3::Node<T>::depth() -> std::size_t {
   if (left() == nullptr) {
     if (right() == nullptr) {
       return 1;
-    } else {
-      return right()->depth() + 1;
     }
-  } else {
-    if (right() == nullptr) {
-      return left()->depth() + 1;
-    } else {
-      return std::max(left()->depth(), right()->depth()) + 1;
-    }
+    return right()->depth() + 1;
   }
+  if (right() == nullptr) {
+    return left()->depth() + 1;
+  }
+  return std::max(left()->depth(), right()->depth()) + 1;
 }
 template <typename T>
 auto Lab3::Node<T>::remove(std::function<void(std::unique_ptr<Node<T>>)> cleanUp) -> void {

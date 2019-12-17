@@ -4,12 +4,31 @@
 
 #include "Tree.hh"
 
+#include <stack>
+
 template <typename T>
 auto Lab3::Tree<T>::preOrderTraverse(std::function<void(T)> f) -> void {
   if (root() == nullptr) {
     throw std::runtime_error("preOrder: root == nullptr");
   }
   root()->preOrder(f);
+}
+
+template <typename T>
+auto Lab3::Tree<T>::preOrderTraverse(std::function<void(T)> f, bool /*unused*/) -> void {
+  std::stack<Node<T>*> s;
+  s.push(root());
+  while (!s.empty()) {
+    auto n = s.top();
+    s.pop();
+    f(n->data());
+    if (n->right() != nullptr) {
+      s.push(n->right());
+    }
+    if (n->left() != nullptr) {
+      s.push(n->left());
+    }
+  }
 }
 
 template <typename T>
@@ -91,6 +110,7 @@ auto Lab3::Tree<T>::depth() -> std::size_t {
   }
   return root()->depth();
 }
+
 template <typename T>
 auto Lab3::Tree<T>::remove(const int key) -> void {
   _length--;
@@ -116,8 +136,9 @@ auto Lab3::Tree<T>::remove(const int key) -> void {
     }
   });
 }
+
 template <typename T>
-Lab3::Tree<T>::Tree(const std::array<std::vector<T>, 2>& def) : _length(0), _root(nullptr) {
+Lab3::Tree<T>::Tree(const std::array<std::vector<T>, 2>& def) : _root(nullptr) {
   const auto& [post, in] = def;
   if (post.size() != in.size()) {
     throw std::runtime_error("two definition size not equal");
@@ -169,6 +190,41 @@ auto Lab3::Tree<T>::makeSubTree(const std::vector<T>& in, const std::vector<T>& 
   }
   // no right child
   auto child = makeSubTree(in, post, index, inBegin, rootIndex - 1, postBegin, postEnd - 1);
+  auto rootNode = std::make_unique<Node<T>>(root, rootIndex);
+  rootNode.get()->_left = std::move(child);
+  return std::move(rootNode);
+}
+
+template <typename T>
+auto Lab3::Tree<T>::preAndIn(const std::vector<T>& in, const std::vector<T>& pre,
+                             std::function<int(T, bool)> index, int inBegin, int inEnd,
+                             int preBegin, int preEnd) -> std::unique_ptr<Node<T>> {
+  if (inBegin == inEnd) {
+    return std::make_unique<Node<T>>(in[inBegin], inBegin);
+  }
+  // first(true) -> pre , second(false) -> in;
+  auto root = pre[preEnd];
+  std::unique_ptr<Node<T>> left = nullptr;
+  std::unique_ptr<Node<T>> right = nullptr;
+  auto rootIndex = index(root, false);  // in
+  if (rootIndex != inEnd) {
+    // has right child
+    auto rInBegin = rootIndex + 1;
+    auto length = inEnd - rInBegin + 1;
+    auto rightChild = makeSubTree(in, pre, index, rInBegin, inEnd, preEnd - length, preEnd - 1);
+    auto rootNode = std::make_unique<Node<T>>(root, rootIndex);
+    rootNode.get()->_right = std::move(rightChild);
+    if (rootIndex == inBegin) {
+      // no left child
+      return std::move(rootNode);
+    }
+    auto leftChild =
+        makeSubTree(in, pre, index, inBegin, rootIndex - 1, preBegin, preEnd - 1 - length);
+    rootNode.get()->_left = std::move(leftChild);
+    return std::move(rootNode);
+  }
+  // no right child
+  auto child = makeSubTree(in, pre, index, inBegin, rootIndex - 1, preBegin, preEnd - 1);
   auto rootNode = std::make_unique<Node<T>>(root, rootIndex);
   rootNode.get()->_left = std::move(child);
   return std::move(rootNode);
