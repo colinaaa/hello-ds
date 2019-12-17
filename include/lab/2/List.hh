@@ -23,13 +23,6 @@ class List {
   List(std::initializer_list<T>);  // init with initializer_list
 
   auto operator==(const List<T> &rhs) const -> bool;
-
-  // range-based loop
-  [[nodiscard]] auto begin() const -> T * { return nullptr; }
-  //! There is an array overflow that I used for the range-base for loop
-  //! should implement Iterator class instead of this
-  [[nodiscard]] auto end() const -> T * { return nullptr; };
-
   [[nodiscard]] inline auto length() const { return _length; }
   inline auto empty() const { return _length == 0; }
 
@@ -44,12 +37,8 @@ class List {
 
   auto insert(std::size_t, const T &) -> void;
   auto insert(const T &) -> void;
-  auto remove(std::size_t, T &) -> void;
   auto remove(std::size_t) -> T;
 
-  auto save(File &&f) -> void;
-
-  auto load(File &&f) -> void;
   auto clear() noexcept -> void;
 };
 }  // namespace Lab2

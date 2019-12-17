@@ -2,7 +2,6 @@
 #include <vector>
 
 #include "2/List.hh"
-#include "List.hh"
 void print_menu(void) {
   /*
    * Function Name: print_menu
