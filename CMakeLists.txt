@@ -22,11 +22,6 @@ include_directories(SYSTEM /usr/include/c++/8)
 elseif(WIN32)
 
 else()
-include_directories(SYSTEM /usr/lib/llvm-9/include/c++/v1 /usr/include/c++/v1)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi -lc++")
-add_compile_options("-stdlib=libc++")
-endif()
-
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
     add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
     message("compile with clang")
@@ -38,6 +33,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     #Uncomment in case of linker errors
     #link_libraries(gcov)
 endif ()
+
+include_directories(SYSTEM /usr/lib/llvm-9/include/c++/v1 /usr/include/c++/v1)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi -lc++")
+add_compile_options("-stdlib=libc++")
+endif()
 
 
 add_subdirectory(lib/Catch2)
