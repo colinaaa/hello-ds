@@ -1,6 +1,7 @@
 %!TEX program = lualatex
 \documentclass[format=draft,language=chinese,category=academic-report]{hustreport}
 \usepackage{booktabs}
+\usepackage[section]{placeins}
 %\usepackage [english]{babel}
 %\usepackage [autostyle, english = american]{csquotes}
 %\MakeOuterQuote{"}
@@ -11,12 +12,6 @@
 \department{计算机科学与技术学院}
 \advisor{许贵平\hspace{1em}副教授}
 
-\abstract{
-    这这是一个\LaTeX{}模板使用实例文件，该模板用于华中科技大学研究生报告写作。
-
-    该模板基于LPPL v1.3发行。
-
-}
 \keywords{\LaTeX{}，华中科技大学，报告，模板}
 
 
@@ -24,13 +19,16 @@
 
 \frontmatter
 \maketitle
-\makeabstract
+%\makeabstract
 \tableofcontents
 %\listoffigures
 %\listoftables
+
 \mainmatter
 \include{lab1}
 \include{lab2}
+\include{lab3}
+\include{lab4}
 \backmatter
 
 \begin{ack}
@@ -46,9 +44,15 @@
 \appendix
 
 \chapter{实验源代码}\label{appendix:1}
-\section{文件结构}\label{appendix:structure}
+\section{文件结构及代码量统计}\label{appendix:structure}
+\subsection{文件结构}
 \lstinputlisting{../tree.dat}
+\subsection{代码量统计}
+\lstinputlisting{../code.dat}
 \section{实验一源代码}\label{appendix:lab1}
+\subsection{头文件定义}\label{appendix:h1}
+\emph{List.hh}
+\lstinputlisting[language=c++]{../include/lab/1/List.hh}
 \subsection{线性表实现代码}
 \emph{构造函数与初始化——List.cc}
 \lstinputlisting[language=c++]{../src/lab/1/List.cc}
@@ -71,6 +75,11 @@
 \lstinputlisting[language=c++]{../test/lab/1/fs_test.cc}
 
 \section{实验二源代码}\label{appendix:lab2}
+\subsection{头文件定义}\label{appendix:h2}
+\emph{List.hh}
+\lstinputlisting[language=c++]{../include/lab/2/List.hh}
+\emph{Node.hh}
+\lstinputlisting[language=c++]{../include/lab/2/Node.hh}
 \subsection{线性表实现代码}
 \emph{节点构造函数与初始化——Node.cc}
 \lstinputlisting[language=c++]{../src/lab/2/Node.cc}
@@ -87,6 +96,40 @@
 \lstinputlisting[language=c++]{../test/lab/2/Node_test.cc}
 \emph{线性表构造函数与初始化测试——List\_test.cc}
 \lstinputlisting[language=c++]{../test/lab/2/List_test.cc}
+
+\section{实验三源代码}\label{appendix:lab3}
+\subsection{头文件定义}\label{appendix:h3}
+\emph{Tree.hh}
+\lstinputlisting[language=c++]{../include/lab/3/Tree.hh}
+\emph{Node.hh}
+\lstinputlisting[language=c++]{../include/lab/3/Node.hh}
+\subsection{二叉树实现代码}
+\emph{节点构造函数与初始化——Node.cc}
+\lstinputlisting[language=c++]{../src/lab/3/Node.cc}
+\emph{树的构造与操作——modify.cc}
+\lstinputlisting[language=c++]{../src/lab/3/Tree.cc}
+\emph{CMake配置}
+\lstinputlisting{../src/lab/3/CMakeLists.txt}
+\subsection{测试代码}\label{appendix:test3}
+\emph{节点构造函数与初始化测试——Node\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/3/Node_test.cc}
+\emph{构造函数与初始化测试——Tree\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/3/Tree_test.cc}
+
+\section{实验四源代码}\label{appendix:lab4}
+\subsection{头文件定义}\label{appendix:h4}
+\emph{Graph.hh}
+\lstinputlisting[language=c++]{../include/lab/4/Graph.hh}
+\subsection{图实现代码}
+\emph{节点构造函数与初始化——Node.cc}
+\lstinputlisting[language=c++]{../src/lab/4/Node.cc}
+\emph{树的构造与操作——modify.cc}
+\lstinputlisting[language=c++]{../src/lab/4/Graph.cc}
+\emph{CMake配置}
+\lstinputlisting{../src/lab/4/CMakeLists.txt}
+\subsection{测试代码}\label{appendix:test4}
+\emph{图功能测试——Graph\_test.cc}
+\lstinputlisting[language=c++]{../test/lab/4/Graph_test.cc}
 
 \end{document}
 \endinput

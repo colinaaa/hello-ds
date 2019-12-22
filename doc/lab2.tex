@@ -88,14 +88,12 @@
 另外，作为封装，将\texttt{\_length, \_elem}都声明为私有成员，防止被非友元函数篡改。
 对于程序中可能出现的错误，进行统一规定：
 \begin{enumerate}
-    \item 对于用户输入不正确导致的在超过长度位置插入或者删除，统一抛出 (\texttt{throw}) \texttt{std::overflow\_error}。
-    \item 对于用户输入不正确导致的在头节点以前插入或删除，统一抛出 (\texttt{throw}) \texttt{std::underflow\_error}。
-    \item 对于其他可能发生的错误，统一抛出 (\texttt{throw}) \texttt{std::runtime\_error}。
+    \item 对于用户输入不正确导致的在超过长度位置插入或者删除，统一抛出\texttt{overflow\_error}。
+    \item 对于用户输入不正确导致的在头节点以前插入或删除，统一抛出  \texttt{underflow\_error}。
+    \item 对于其他可能发生的错误，统一抛出  \texttt{runtime\_error}。
 \end{enumerate}
 \subsubsection{函数设计}
-头文件中的函数原型声明见下面的代码段
-\lstinputlisting[language=c++]{../include/lab/2/List.hh}
-\lstinputlisting[language=c++]{../include/lab/2/Node.hh}
+头文件中的函数原型声明见\autoref{appendix:h2}
 函数时间复杂度分析见\autoref{tab:timeandspace2}
 \begin{table}[h]
 \centering
@@ -108,7 +106,7 @@
     \multicolumn{1}{c|}{2}  & 销毁表& \texttt{ DestroyList()} & $O(1)$ &  $O(1)$ \\
     \multicolumn{1}{c|}{3}  & 清空表& \texttt{ ClearList()} & $O(1)$ &  $O(1)$   \\
     \multicolumn{1}{c|}{4}  & 判定空表& \texttt{ empty()} & $O(1)$ &  $O(1)$     \\
-    \multicolumn{1}{c|}{5}  & 求表长 & \texttt{ length()} & $O(1)$ &  $O(1)$     \\
+    \multicolumn{1}{c|}{5}  & 求表长 & \texttt{ length()} & $O(n)$ &  $O(1)$     \\
     \multicolumn{1}{c|}{6}  & 获得元素 & \texttt{ get()} & $O(n)$ &  $O(1)$      \\
     \multicolumn{1}{c|}{7}  & 查找元素 & \texttt{ locate()} & $O(n)$ &  $O(1)$   \\
     \multicolumn{1}{c|}{8}  & 获得前驱 & \texttt{ prior()} & $O(n)$ &  $O(1)$    \\
@@ -119,39 +117,78 @@
 \end{tabular}
 \end{table}
 \subsubsection{算法设计}
-只给出插入 (\texttt{insert})和删除 (\texttt{delete})元素的算法设计。
-\newline
+\paragraph{插入算法}如\autoref{alg:insert2}所述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\par
 \begin{algorithm}[H]
     \SetAlgoLined
     \KwIn{elem, index}
     \KwOut{none}
     \If{index out of range}{ throw error}
-    let ptr = first pointer\\
+    let ptr = first pointer\;
     \For{i=index; i\ge{1}; i--}{
         move the ptr backword
     }
-    new\_node = Node(elem,ptr.next)\\
-    ptr.next = new\_node\\
+    new\_node = Node(elem,ptr.next)\;
+    ptr.next = new\_node\;
     length++
 \caption{Insert}\label{alg:insert2}
 \end{algorithm}
-插入算法如上述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\paragraph{删除算法}如\autoref{alg:delete2}所述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\par
 \begin{algorithm}[H]
     \SetAlgoLined
     \KwIn{index}
     \KwOut{out}
     \If{index out of range}{ throw error }
-    let out = empty element
-    \\
-    let ptr = first pointer\\
+    let out = empty element\;
+    let ptr = first pointer\;
     \For{i=index; i > 1; i--}{
         move the ptr backword
     }
-    ptr.next = ptr.next.next
+    ptr.next = ptr.next.next\;
     length--
 \caption{Delete}\label{alg:delete2}
 \end{algorithm}
-删除算法如上述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\paragraph{查找算法}如\autoref{alg:locate2}所述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\par
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{value}
+    \KwOut{index}
+    let ptr = first pointer\;
+    \For{i=index; i < list.length; i++}{
+        move the ptr backword\;
+        \If{*ptr == value}{\Return{index}}
+    }
+\caption{Locate}\label{alg:locate2}
+\end{algorithm}
+\paragraph{判定空表算法}如\autoref{alg:empty2}所述，其时间复杂度为$O(1)$，空间复杂度为$O(1)$
+\par
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{none}
+    \KwOut{empty}
+    \SetKwData{TRUE}{TRUE}
+    \SetKwData{FALSE}{FALSE}
+    \If{head.next == nullptr}{\Return{\TRUE}}
+    \Else{\Return{\FALSE}}
+\caption{Locate}\label{alg:empty2}
+\end{algorithm}
+\paragraph{求表长算法}如\autoref{alg:length2}所述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\par
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{none}
+    \KwOut{length}
+    let ptr = first pointer\;
+    let length = 0\;
+    \While{ptr.next != nullptr}{
+        move the ptr backword\;
+        length++\;
+    }
+    \Return{length}
+\caption{Locate}\label{alg:length2}
+\end{algorithm}
 \section{系统实现}
 \subsection{开发环境}
 本次实验中使用的环境如下：
@@ -426,6 +463,14 @@
 了所有基本功能，并且能够执行文件操作，同时也可以在客户端进行多表操作。
 \par
 通过测试，证明了系统实现的完整性和正确性，确保了系统的良好运行。
+\par
+\autoref{fig:cov2}中为测试覆盖度\footnote{更具体的可以见\texttt{out}文件夹}
+
+\begin{figure}
+\centering
+\caption{测试覆盖度}\label{fig:cov2}
+\includegraphics[scale=.5]{cov.png}
+\end{figure}
 
 \section{实验结果与分析}\label{sec:test24}
 本次实验加深了对线性表的概念、基本运算的理解，

@@ -89,21 +89,6 @@ $location(a_i) = location(a_1) + (i-1) * size 　1\le i\le n$ 其中，$size$是
 分别代表当前线性表的已有元素数量与能够存储的元素的数量。
 \par
 另外，作为封装，将\texttt{\_length, \_size, \_elem}都声明为私有成员，防止被非友元函数篡改。
-\begin{lstlisting}[language=c++]
-#include <string>
-#include <memory>
-namespace Lab1 {
-template <typename T>
-class List {
-  using File = std::string;
- private:
-  std::size_t _length;  // len 已有元素数量
-  std::size_t _size;    // cap 能够存储的元素数量
-  std::unique_ptr<T[]> _elem;
-  // ...
-}
-}
-\end{lstlisting}
 对于程序中可能出现的错误，进行统一规定：
 \begin{enumerate}
     \item 对于用户输入不正确导致的数组上溢，统一抛出 (\texttt{throw}) \texttt{std::overflow\_error}。
@@ -111,40 +96,7 @@ class List {
     \item 对于其他可能发生的错误，统一抛出 (\texttt{throw}) \texttt{std::runtime\_error}。
 \end{enumerate}
 \subsection{函数设计}
-头文件中的函数原型声明见下面的代码段
-\begin{lstlisting}[language=c++,float,floatplacement=h]
-namespace Lab1 {
-template <typename T>
-class List {
-  // ...
- public:
-  List();
-  explicit List(std::size_t);      // init with size
-  List(std::initializer_list<T>);  // init with initializer_list
-  // begin() and end() implement range-based loop
-  auto begin() const -> T * { return _length > 0 ? &_elem[0] : nullptr; }
-  //! There is an array overflow that I used for the range-base for loop
-  //! should implement Iterator class instead of this
-  auto end() const -> T * { return _length > 0 ? &_elem[_length] : nullptr; }
-  inline auto size() const { return _size; }
-  inline auto length() const { return _length; }
-  auto empty() -> bool; // test whether list is empty
-  auto operator[](std::size_t) noexcept(false) -> T &; // a more common way to get and set elements
-  auto get(std::size_t) -> T &; // get() gets an element
-  auto locate(T, std::function<bool(const T &, const T &)> &&) -> std::size_t; // locate() finds an element
-  auto prior(const T &) -> T &; // prior finds the prior element
-  auto next(const T &) -> T &; // next finds the next element
-  auto traverse(std::function<void(T &)> &&) -> void;
-  auto resize(std::size_t) -> void;
-  auto insert(std::size_t, const T &) -> void; // insert an element after the index
-  auto insert(const T &) -> void; // insert an element to the tail
-  auto remove(std::size_t, T &) -> void; // remove an element from index, returning by param
-  auto remove(std::size_t) -> T; // remove an element from index returning by return value
-  auto save(File &&f) -> void; // save to file
-  auto load(File &&f) -> void; // load from file
-}
-}
-\end{lstlisting}\label{code:header1}
+头文件中的函数原型声明见\autoref{appendix:h1}
 \par
 函数时间复杂度分析见\autoref{tab:timeandspace1}
 \begin{table}[h]
@@ -170,8 +122,8 @@ class List {
 \end{table}
 \subsection{算法设计}
 由于大部分基本操作都较为简单，因此在这里就不一一列举。
-只给出插入 (\texttt{insert})和删除 (\texttt{delete})元素的算法设计。
-\newline
+\paragraph{插入算法}如\autoref{alg:insert}所述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\par
 \begin{algorithm}[H]
     \SetAlgoLined
     \KwIn{elem, index}
@@ -186,8 +138,9 @@ class List {
     elements[i]=elem
 \caption{Insert}\label{alg:insert}
 \end{algorithm}
-插入算法如上述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
-\begin{algorithm}
+\paragraph{删除算法}如\autoref{alg:delete}所述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\par
+\begin{algorithm}[H]
     \SetAlgoLined
     \KwIn{index}
     \KwOut{out}
@@ -200,8 +153,40 @@ class List {
     length--
 \caption{Delete}\label{alg:delete}
 \end{algorithm}
-\newline
-删除算法如上述，其时间复杂度为$O(n)$，空间复杂度为$O(1)$
+\paragraph{遍历算法}如\autoref{alg:trav1}所述。
+\par
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{visit}
+    \KwOut{none}
+    \For{i=index; i < length; i++}{
+        visit the i th element
+    }
+    \caption{Traverse}\label{alg:trav1}
+\end{algorithm}
+\paragraph{判定空表}如\autoref{alg:empty1}所述
+\par
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{none}
+    \KwOut{empty}
+    \SetKwData{TRUE}{TRUE}
+    \SetKwData{FALSE}{FALSE}
+    \If{list.length == 0}{\Return\TRUE}
+    \Else{\Return\FALSE}
+    \caption{Empty}\label{alg:empty1}
+\end{algorithm}
+\paragraph{查找元素}如\autoref{alg:locate1}所述
+\par
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{value}
+    \KwOut{index}
+    \For{i=0;i<list.length;i++}{
+        \If{value == list[i].value}{\Return{i}}
+    }
+    \caption{Locate} \label{alg:locate1}
+\end{algorithm}
 \section{系统实现}
 \subsection{开发环境}
 本次实验中使用的环境如下：
@@ -481,6 +466,14 @@ class List {
 了所有基本功能，并且能够执行文件操作，同时也可以在客户端进行多表操作。
 \par
 通过测试，证明了系统实现的完整性和正确性，确保了系统的良好运行。
+\par
+\autoref{fig:cov1}中为测试覆盖度\footnote{更具体的可以见\texttt{out}文件夹}
+
+\begin{figure}
+\centering
+\caption{测试覆盖度}\label{fig:cov1}
+\includegraphics[scale=.5]{cov.png}
+\end{figure}
 
 \section{实验结果与分析}\label{sec:4}
 本次实验加深了对线性表的概念、基本运算的理解，
