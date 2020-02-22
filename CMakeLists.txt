@@ -10,7 +10,7 @@ if(NOT WIN32)
 find_library(libc++ REQUIRED)
 endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined -g -O1")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined -g -O1")
 
 SET(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG_INIT} --coverage -O0")
 SET(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS_DEBUG} --coverage")
@@ -45,4 +45,4 @@ add_subdirectory(lib/Catch2)
 
 add_subdirectory (src) 
 
-add_subdirectory (test)
+#add_subdirectory (test)
