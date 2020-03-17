@@ -3,8 +3,10 @@ auto Project::Parser::run(const std::string& filename) -> int {
   int fd, bt, *idmain, *ast;
   int i, *t;  // temps
   // setup keywords and library functions
-  char keywords[] = "char else enum if int return sizeof while";
-  char library[] = "open read close printf malloc free memset memcmp exit void main";
+  char keywords[] =
+    "char else enum if int return sizeof for continue break while";
+  char library[] =
+    "open read close printf malloc free memset memcmp exit void main";
 
   p = keywords;
   i = Char;

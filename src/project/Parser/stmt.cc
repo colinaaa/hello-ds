@@ -31,6 +31,22 @@ void Project::Parser::stmt() {
     *--n = (int)b;
     *--n = (int)a;
     *--n = Cond;
+  } else if (tk == For) {
+    next();
+    if (tk == '(')
+      expr(Assign);
+    else {
+      printf("%d: open paren expected\n", line);
+      exit(-1);
+    }
+    stmt();
+    stmt();
+    stmt();
+    if (tk == ')')
+      next();
+    else {
+      printf("%d: close paren expected\n", line);
+    }
   } else if (tk == While) {
     next();
     if (tk == '(')
@@ -78,6 +94,24 @@ void Project::Parser::stmt() {
   } else if (tk == ';') {
     next();
     *--n = ';';
+  } else if (tk == Continue) {
+    next();
+    if (tk != ';') {
+      printf("%d: semicolon expected\n", line);
+      exit(-1);
+    }
+    a = 0;
+    *--n = (int)a;
+    *--n = Continue;
+  } else if (tk == Break) {
+    next();
+    if (tk != ';') {
+      printf("%d: semicolon expected\n", line);
+      exit(-1);
+    }
+    a = 0;
+    *--n = (int)a;
+    *--n = Break;
   } else {
     expr(Assign);
     if (tk == ';')

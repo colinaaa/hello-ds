@@ -143,6 +143,7 @@ void Project::Parser::gen(int *n) {
       *++e = ADJ;
       *++e = n[3];
     }
+  } else if (i == For) {
   } else if (i == While) {
     *++e = JMP;
     b = ++e;
@@ -157,6 +158,8 @@ void Project::Parser::gen(int *n) {
   } else if (i == '{') {
     gen((int *)n[1]);
     gen(n + 2);
+  } else if (i == Break) {
+  } else if (i == Continue) {
   } else if (i == Enter) {
     *++e = ENT;
     *++e = n[1];
