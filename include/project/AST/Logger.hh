@@ -8,15 +8,14 @@ namespace Project {
 class Logger {
  private:
   std::stack<int> _s;
-  const int defaultLength = 8;
+  const int defaultLength = 0;
+  int indent = 2;
 
  public:
-  void log(std::string&);
-  void log(std::string&, int);
-  void log(std::string&, std::string&);
+  void log(const std::string&);
+  void log(const std::string&, int);
 
  private:
-  void log(const std::string&, const std::string&, int);
   inline int top() {
     if (_s.empty()) {
       return defaultLength;
@@ -27,7 +26,9 @@ class Logger {
   }
 
  public:
-  // Logger() { _s.push(4); }
+  Logger(const int indent = 2) : indent(indent) {}
+  inline void setIndent(int idt) { indent = idt; }
+
 };  // class Logger
 }  // namespace Project
 #endif  // PROJECT_LOGGER_HH

@@ -42,6 +42,7 @@ endif()
 
 add_subdirectory(lib/Catch2)
 add_subdirectory(lib/fmt)
+add_subdirectory(lib/docopt.cpp)
 
 
 add_subdirectory (src)

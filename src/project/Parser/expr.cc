@@ -1,4 +1,8 @@
+#include <fmt/printf.h>
+
 #include "Parser.hh"
+
+using fmt::printf;
 
 void Project::Parser::expr(int lev) {
   int t, *d, *b;
@@ -188,10 +192,9 @@ void Project::Parser::expr(int lev) {
       printf("%d: bad lvalue in pre-increment\n", line);
       exit(-1);
     }
-  } else if (tk == For || tk == Continue){
+  } else if (tk == For || tk == Continue) {
     // do nothing
-  }
-  else {
+  } else {
     printf("%d: bad expression\n", line);
     exit(-1);
   }

@@ -7,7 +7,7 @@ void Project::Parser::next() {
     ++p;
     if (tk == '\n') {
       if (src != 0) {
-        printf("%d: %.*s", line, p - lp, lp);
+        printf("%2d: %.*s", line, p - lp, lp);
         lp = p;
       }
       /*

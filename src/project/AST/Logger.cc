@@ -5,26 +5,17 @@
 
 #include <iostream>
 
-void Project::Logger::log(std::string& name) { log(std::forward<std::string>(name), "", 0); }
-
-void Project::Logger::log(std::string& name, int childNumber) {
-  log(std::forward<std::string>(name), "", childNumber);
+void Project::Logger::log(const std::string& name) {
+  log(std::forward<const std::string>(name), 0);
 }
 
-void Project::Logger::log(std::string& name, std::string& value) {
-  log(std::forward<std::string>(name), std::forward<std::string>(value), 0);
-}
-
-void Project::Logger::log(const std::string& name, const std::string& value, int childNumber) {
+void Project::Logger::log(const std::string& name, int childNumber) {
   int depth = top();
 
-  if (!value.empty()) {
-    std::cout << fmt::format("{:>{}} node with value: {}\n", name, depth, value);
-  } else {
-    std::cout << fmt::format("{:>{}} node\n", name, depth);
-  }
+  std::cout << fmt::format("{:>{}} node\n", name, depth + name.size());
+
   while (childNumber != 0) {
-    _s.push(depth + 2);
+    _s.push(depth + indent);
     childNumber--;
   }
 }

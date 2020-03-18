@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+
 #include "AST/Logger.hh"
 #define int long long
 
@@ -27,10 +28,7 @@ class Parser {
       ival = 0,       // current token value
       ty = 0,         // current expression type
       loc = 0,        // local variable offset
-      line,           // current line number
-
-      src,    // print source and assembly flag
-      debug;  // print executed instructions
+      line;           // current line number
 
   // tokens and classes (operators last and in precedence order)
   enum {
@@ -137,19 +135,26 @@ class Parser {
 
   auto run(const std::string &) -> int;
 
+ private:
+  bool src = false;    // print source
+  bool debug = false;  // print executed instructions
+  bool tree = false;
+
  public:
   Parser();
-  inline void setSrc(const int v = 1) noexcept { src = v; }
-  inline void setDebug(const int v = 1) noexcept { debug = v; }
+  inline void setSrc(const bool v = true) noexcept { src = v; }
+  inline void setDebug(const bool v = true) noexcept { debug = v; }
+  inline void setTree(const bool v = true) noexcept { tree = v; }
+  inline void setIndent(const int v) noexcept { logger.setIndent(v); }
 
  private:
   Logger logger;
   // node only with name
-  void log(std::string&&);
+  void log(const std::string &&);
   // node with child number
-  void log(std::string&&, int);
-  // node with value
-  void log(std::string&&, std::string&&);
+  void log(const std::string &&, int);
+
+ public:
 };
 
 }  // namespace Project
