@@ -43,6 +43,7 @@ endif()
 add_subdirectory(lib/Catch2)
 add_subdirectory(lib/fmt)
 add_subdirectory(lib/docopt.cpp)
+add_subdirectory(lib/magic_enum)
 
 
 add_subdirectory (src)

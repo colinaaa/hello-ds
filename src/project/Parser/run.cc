@@ -1,15 +1,25 @@
+#include <fcntl.h>
 #include <fmt/printf.h>
+#include <unistd.h>
+
+#define MAGIC_ENUM_RANGE_MAX 256
+#define MAGIC_ENUM_RANGE_MIN 0
+#include <magic_enum.hpp>
 
 #include "Parser.hh"
 
 using fmt::printf;
 
+inline auto Project::Parser::tokenName(int tk) {
+  return magic_enum::enum_name(static_cast<Token>(tk));
+}
+
 auto Project::Parser::run(const std::string& filename) -> int {
   int fd, bt, *idmain, *ast;
   int i, *t;  // temps
   // setup keywords and library functions
-  char keywords[] = "char else enum if int return sizeof for continue break while";
-  char library[] = "open read close printf malloc free memset memcmp exit void main";
+  static char keywords[] = "char else enum if int return sizeof for continue break while";
+  static char library[] = "open read close printf malloc free memset memcmp exit void main";
 
   p = keywords;
   i = Char;
@@ -71,7 +81,8 @@ auto Project::Parser::run(const std::string& filename) -> int {
         i = 0;
         while (tk != '}') {
           if (tk != Id) {
-            printf("%d: bad enum identifier %d\n", line, tk);
+            auto token = tokenName(tk);
+            printf("%d: bad enum identifier: is %s\n", line, token);
             return -1;
           }
           next();
@@ -80,7 +91,7 @@ auto Project::Parser::run(const std::string& filename) -> int {
             n = ast;
             expr(Cond);
             if (*n != Num) {
-              printf("%d: bad enum initializer\n", line);
+              printf("%d: bad enum initializer: is not Num\n", line);
               return -1;
             }
             i = n[1];
@@ -100,11 +111,13 @@ auto Project::Parser::run(const std::string& filename) -> int {
         ty = ty + PTR;
       }
       if (tk != Id) {
-        printf("%d: bad global declaration\n", line);
+        auto token = tokenName(tk);
+        printf("%d: bad global declaration: token is %s, not Identifier\n", line, token);
         return -1;
       }
       if (id[Class]) {
-        printf("%d: duplicate global definition\n", line);
+        auto name = getFuncName(reinterpret_cast<char*>(id[Name]));
+        printf("%d: duplicate global definition: %s\n", line, name);
         return -1;
       }
       next();
@@ -127,11 +140,13 @@ auto Project::Parser::run(const std::string& filename) -> int {
             ty = ty + PTR;
           }
           if (tk != Id) {
-            printf("%d: bad parameter declaration\n", line);
+            auto token = magic_enum::enum_name(static_cast<Token>(tk));
+            printf("%d: bad parameter declaration, token is not identifiers but %s\n", line, token);
             return -1;
           }
           if (id[Class] == Loc) {
-            printf("%d: duplicate parameter definition\n", line);
+            auto name = getParamName(reinterpret_cast<char*>(id[Name]));
+            printf("%d: duplicate parameter definition: %s\n", line, name);
             return -1;
           }
           id[HClass] = id[Class];

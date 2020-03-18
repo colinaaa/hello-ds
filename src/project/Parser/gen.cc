@@ -120,16 +120,17 @@ void Project::Parser::gen(int *n) {
     gen((int *)n[1]);
     gen(n + 2);
   } else if (i == Sys || i == Fun) {
-    int count;
+    int count = 0;
     b = (int *)n[1];
     while (b) {
       count++;
       b = (int *)*b;
     }
-    log("Function", count);
+    log("FunctionCall", count);
     b = (int *)n[1];
     while (b) {
       gen(b + 1);
+      b = (int *)*b;
     }
   } else if (i == For) {
   } else if (i == While) {

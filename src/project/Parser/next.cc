@@ -1,4 +1,8 @@
+#include <fmt/printf.h>
+
 #include "Parser.hh"
+
+using fmt::printf;
 
 void Project::Parser::next() {
   char *pp;

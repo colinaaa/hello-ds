@@ -1,12 +1,6 @@
 #ifndef PROJECT_PARSER_HH
 #define PROJECT_PARSER_HH
 
-#include <fcntl.h>
-#include <memory.h>
-#include <unistd.h>
-
-#include <cstdio>
-#include <cstdlib>
 #include <string>
 
 #include "AST/Logger.hh"
@@ -31,7 +25,7 @@ class Parser {
       line;           // current line number
 
   // tokens and classes (operators last and in precedence order)
-  enum {
+  enum Token {
     Num = 128,
     Fun,
     Sys,
@@ -77,47 +71,7 @@ class Parser {
   };
 
   // operators codes
-  enum {
-    LEA,
-    IMM,
-    JMP,
-    JSR,
-    BZ,
-    BNZ,
-    ENT,
-    ADJ,
-    LEV,
-    LI,
-    LC,
-    SI,
-    SC,
-    PSH,
-    OR,
-    XOR,
-    AND,
-    EQ,
-    NE,
-    LT,
-    GT,
-    LE,
-    GE,
-    SHL,
-    SHR,
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    MOD,
-    OPEN,
-    READ,
-    CLOS,
-    PRTF,
-    MALC,
-    FREE,
-    MSET,
-    MCMP,
-    EXIT
-  };
+  enum { OPEN, READ, CLOS, PRTF, MALC, FREE, MSET, MCMP, EXIT };
 
  private:
   // types
@@ -153,6 +107,14 @@ class Parser {
   void log(const std::string &&);
   // node with child number
   void log(const std::string &&, int);
+  static inline auto getTokenName(char *name, char delimit) {
+    auto identifier = std::string{name};
+    return identifier.substr(0, identifier.find_first_of(delimit));
+  }
+  static inline auto getFuncName(char *name) { return getTokenName(name, '('); }
+  static inline auto getParamName(char *name) { return getTokenName(name, ','); }
+
+  static inline auto tokenName(int tk);
 
  public:
 };
