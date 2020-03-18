@@ -8,3 +8,6 @@
 [submodule "lib/docopt.cpp"]
 	path = lib/docopt.cpp
 	url = https://github.com/docopt/docopt.cpp
+[submodule "lib/magic_enum"]
+	path = lib/magic_enum
+	url = https://github.com/Neargye/magic_enum
