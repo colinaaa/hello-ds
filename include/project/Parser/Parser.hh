@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include "AST/Logger.hh"
 #define int long long
 
 namespace Project {
@@ -140,6 +141,15 @@ class Parser {
   Parser();
   inline void setSrc(const int v = 1) noexcept { src = v; }
   inline void setDebug(const int v = 1) noexcept { debug = v; }
+
+ private:
+  Logger logger;
+  // node only with name
+  void log(std::string&&);
+  // node with child number
+  void log(std::string&&, int);
+  // node with value
+  void log(std::string&&, std::string&&);
 };
 
 }  // namespace Project

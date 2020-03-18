@@ -41,8 +41,9 @@ endif()
 
 
 add_subdirectory(lib/Catch2)
+add_subdirectory(lib/fmt)
 
 
-add_subdirectory (src) 
+add_subdirectory (src)
 
 #add_subdirectory (test)
