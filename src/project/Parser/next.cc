@@ -10,17 +10,18 @@ void Project::Parser::next() {
   while ((tk = *p) != 0) {
     ++p;
     if (tk == '\n') {
-      if (src != 0) {
+      if (output) {
+        out << fmt::sprintf("%.*s", p - lp, lp);
+      }
+      if (src) {
         printf("%2d: %.*s", line, p - lp, lp);
+      }
+      if( output || src ) {
         lp = p;
       }
-      /*
-       * insert into AST here
-       */
       ++line;
     } else if (tk == '#') {
       // marco
-      // TODO(marco): add marco
       while (*p != 0 && *p != '\n') ++p;
     } else if ((tk >= 'a' && tk <= 'z') || (tk >= 'A' && tk <= 'Z') || tk == '_') {
       // indentifier

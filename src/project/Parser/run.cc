@@ -47,7 +47,7 @@ auto Project::Parser::run(const std::string& filename) -> int {
     return -1;
   }
   if ((fd = open(filename.c_str(), 0)) < 0) {
-    printf("could not open(%s)\n", filename.c_str());
+    printf("could not open(%s)\n", filename);
     return -1;
   }
   if ((i = read(fd, p, poolSize - 1)) <= 0) {
@@ -58,7 +58,8 @@ auto Project::Parser::run(const std::string& filename) -> int {
     printf("could not malloc(%d) abstract syntax tree area\n", poolSize);
     return -1;
   }
-  ast = (int*)((int)ast + poolSize);  // abstract syntax tree is most efficiently built as a stack
+  out.open(outputFileName, std::ios::out | std::ios::trunc);
+  (ast = (int*)((int)ast + poolSize));  // abstract syntax tree is most efficiently built as a stack
 
   p[i] = 0;
   close(fd);
@@ -232,5 +233,8 @@ auto Project::Parser::run(const std::string& filename) -> int {
     printf("main() not defined\n");
     return -1;
   }
+
+  out.close();
+
   return 0;
 }

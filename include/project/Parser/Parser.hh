@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <string>
 
 #include "AST/Logger.hh"
@@ -92,9 +93,13 @@ class Parser {
   auto run(const std::string &) -> int;
 
  private:
-  bool src = false;    // print source
-  bool debug = false;  // print executed instructions
-  bool tree = false;
+  bool src = false;     // print source
+  bool debug = false;   // print executed instructions
+  bool tree = false;    // print AST tree
+  bool output = false;  // output to file
+
+  std::string outputFileName = "out.c";
+  std::ofstream out;
 
  public:
   Parser();
@@ -102,6 +107,8 @@ class Parser {
   inline void setDebug(const bool v = true) noexcept { debug = v; }
   inline void setTree(const bool v = true) noexcept { tree = v; }
   inline void setIndent(const int v) noexcept { logger.setIndent(v); }
+  inline void setOutputName(const std::string &v) { outputFileName = v; }
+  inline void setOutput(const bool v = true) { output = v; }
 
  private:
   Logger logger;
