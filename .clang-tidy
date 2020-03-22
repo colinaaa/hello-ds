@@ -1,2 +1,2 @@
-Checks:          '-*,modernize-*,readability-*,misc-*,google-*,cppcoreguidelines-*,clang-analyzer-*,performance-*,-google-runtime-references,-cppcoreguidelines-avoid-c-arrays,-modernize-avoid-c-arrays'
+Checks:          '-*,modernize-*,readability-*,misc-*,google-*,cppcoreguidelines-*,clang-analyzer-*,performance-*,-google-runtime-references,-cppcoreguidelines-avoid-c-arrays,-modernize-avoid-c-arrays,-cppcoreguidelines-pro-type-reinterpret-cast,-cppcoreguidelines-pro-bounds-pointer-arithmetic'
 FormatStyle: Google

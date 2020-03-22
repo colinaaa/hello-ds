@@ -16,7 +16,7 @@ inline auto Project::Parser::tokenName(int tk) {
 
 auto Project::Parser::run(const std::string& filename) -> int {
   int fd, bt, *idmain, *ast;
-  int i, *t;  // temps
+  int i, *t, *b;  // temps
   // setup keywords and library functions
   static char keywords[] = "char else enum if int return sizeof for continue break while";
   static char library[] = "open read close printf malloc free memset memcmp exit void main";
@@ -194,13 +194,18 @@ auto Project::Parser::run(const std::string& filename) -> int {
           next();
         }
         n = ast;
-        *--n = ';';
+        int count;
+        count = 0;
+        b = --n;
+        *--n = '[';
         while (tk != '}') {
           t = n;
           stmt();
-          *--n = (int)t;
+          *--n = reinterpret_cast<int>(t);
           *--n = '{';
+          count++;
         }
+        *b = count;
         *--n = -i;
         *--n = Enter;
         gen(n);

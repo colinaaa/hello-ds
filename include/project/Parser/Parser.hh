@@ -1,6 +1,8 @@
 #ifndef PROJECT_PARSER_HH
 #define PROJECT_PARSER_HH
 
+#include <cstdlib>
+#include <cstring>
 #include <string>
 
 #include "AST/Logger.hh"

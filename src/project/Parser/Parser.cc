@@ -1,8 +1,6 @@
 #include "Parser.hh"
 
-#include <cstdlib>
-
-Project::Parser::Parser() : line(1), src(0), debug(0) {
+Project::Parser::Parser() : line(1) {
   int i;
 
   if ((sym = static_cast<int*>(malloc(poolSize))) == nullptr) {
