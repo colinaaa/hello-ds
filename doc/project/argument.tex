@@ -1,0 +1,96 @@
+\chapter{系统需求分析与总体设计}
+
+% 说明设计原理并进行方案选择
+% 阐明为什么要选择这个设计方案(包括各种方案的分析、比较)以及所采用方案的特点
+
+\section{系统需求分析}
+
+% 这部分应该写的是用户需求，明确你做的系统要实现的目标，
+% 能处理一些什么样的事务、事务处理流程等。
+
+系统应当具有以下功能：
+
+\begin{itemize}
+	\item 识别源代码中的关键字、标识符等
+	\item 分析各个语素所组成的语句的语法正确性
+	\item 根据源文件生成对应的抽象语法树
+	\item 根据抽象语法树生成代码
+	\item 对于源文件中出现的错误，能够指出错误类型与位置
+\end{itemize}
+
+更具体而言，对于token的分隔应当能适应任何长度、种类的分隔符。
+包括但不限于空格符、换行符、制表符等。
+
+对于抽象语法树，应当能够根据节点的层级进行缩进，也应当能够由用户指定
+缩进的大小。
+
+在交互方面，应当能正确分析输入的选项，能够指定所编译的源文件，
+应当能够指定输出文件，应当能够指定是否输出抽象语法树。
+
+\section{系统总体设计}
+
+% 这部分可根据用户需求，设计和规划一个系统，说明清楚系统应该有哪些功能模块，
+% 每个模块做什么。最后给出完整的系统模块结构图
+
+\begin{figure}[hbt]
+	\centering
+	\begin{tikzpicture}
+    \node (terminal1) at (0,-0.5) [draw, terminal,
+    minimum height=0.5cm] {词法分析器 Lexical Analyzer};
+
+    \node (terminal2) at (0,-2) [draw, terminal,
+    minimum height=0.5cm] {语法分析器 Syntax Analyzer};
+
+    \node (terminal3) at (-4,-3.5) [draw, terminal,
+    minimum height=0.5cm] {语法树打印器 AST Printer};
+
+    \node (terminal4) at (4,-3.5) [draw, terminal,
+    minimum height=0.5cm] {代码生成器 Code Generater};
+
+	\draw[->] (terminal1) --  (terminal2);
+	\draw[->] (terminal2) --  (terminal3);
+	\draw[->] (terminal2) --  (terminal4);
+	\end{tikzpicture}
+	\caption{系统模块结构}\label{fig:system_arch}
+\end{figure}
+
+系统主要分为四个模块：词法分析、语法分析、打印器和生成器。\autoref{fig:system_arch}
+中展示了模块间的关系。
+
+\paragraph{词法分析器} 词法分析器主要负责对源文件进行标记化，区分由
+分隔符分隔的标记，并且使用有限自动状态机的方式判断标记的类别（如：{\tt 123}为数字，
+{\tt x}为标识符，{\tt int}为关键字），但在这个过程中，并不关心标记之间的关系
+\cite{aho1986compilers}（例如：词法分析器能够将括号识别为标记，但并不保证括号是否匹配）。
+
+\paragraph{语法分析器}
+语法分析器根据所定义的巴斯克范式对标记序列进行分析并确定其语法结构。
+语法分析器使用词法分析器从输入字符流中分离出一个个的“单词”，并将单词流作为其输入，
+进行语法检查、并构建由输入的单词组成的抽象语法树\cite{muchnick1997advanced}。
+
+\paragraph{语法树打印器}
+语法树打印器负责将生成的抽象语法树形象化地表示出来，主要用于检查系统的正确性。
+
+\paragraph{代码生成器}
+代码生成器以语法分析器生成的抽象语法树作为输入，来生成与之向对应的代码，
+主要用于检查系统的正确性。
+
+\section{项目架构}
+
+\autoref{tree}中给出了项目的整体架构。
+\lstinputlisting[label=tree,caption={项目架构}]{../../project_tree.dat}
+
+\subsection{各文件说明}
+
+{\tt src}文件夹中为主要的源文件，其中，
+\begin{itemize}
+	\item {\tt next.cc}为词法分析器的实现。
+	\item {\tt expr.cc}为语法分析器中分析表达式的部分。
+	\item {\tt stmt.cc}为语法分析器中分析语句的部分。
+	\item {\tt gen.cc}为语法分析器中生成抽象语法树的部分。
+	\item {\tt logger.cc}为代码生成器的实现。
+	\item {\tt AST/Logger.cc}为抽象语法树打印器的实现。
+\end{itemize}
+
+{\tt include}文件夹中为头文件。
+
+{\tt test}文件夹中为单元测试文件。
