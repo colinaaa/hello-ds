@@ -5,7 +5,7 @@
 using fmt::printf;
 
 void Project::Parser::stmt() {
-  int *a, *b, *c;
+  int *a, *b, *c; // temps
 
   if (tk == If) {
     next();

@@ -1,5 +1,9 @@
 #include <fmt/printf.h>
 
+#define MAGIC_ENUM_RANGE_MAX 256
+#define MAGIC_ENUM_RANGE_MIN 0
+#include <magic_enum.hpp>
+
 #include "Parser.hh"
 
 using fmt::printf;
@@ -530,7 +534,7 @@ void Project::Parser::expr(int lev) {
       *--n = ty = t - PTR;
       *--n = Load;
     } else {
-      printf("%d: compiler error tk=%d\n", line, tk);
+      printf("%d: compiler error tk=%d\n", line, magic_enum::enum_name(static_cast<Token>(tk)));
       exit(-1);
     }
   }

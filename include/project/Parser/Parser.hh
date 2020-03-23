@@ -74,14 +74,14 @@ class Parser {
   };
 
   // operators codes
-  enum { OPEN, READ, CLOS, PRTF, MALC, FREE, MSET, MCMP, EXIT };
+  enum Operator { OPEN, READ, CLOS, PRTF, MALC, FREE, MSET, MCMP, EXIT };
 
  private:
   // types
-  enum { CHAR, INT, PTR };
+  enum Type { CHAR, INT, PTR };
 
   // identifier offsets
-  enum { Tk, Hash, Name, Class, Type, Val, HClass, HType, HVal, Idsz };
+  enum Offset { Tk, Hash, Name, Class, Type, Val, HClass, HType, HVal, Idsz };
   int poolSize = 256 * 1024;
 
  public:
@@ -124,8 +124,6 @@ class Parser {
   static inline auto getParamName(char *name) { return getTokenName(name, ','); }
 
   static inline auto tokenName(int tk);
-
- public:
 };
 
 }  // namespace Project
