@@ -4,6 +4,8 @@
 
 using fmt::printf;
 
+// expr - Parse expression
+//    Arg: lev  the current operator precedence
 void Project::Parser::expr(int lev) {
   int t, *d, *b;
 
@@ -11,36 +13,50 @@ void Project::Parser::expr(int lev) {
     printf("%d: unexpected eof in expression\n", line);
     exit(-1);
   } else if (tk == Num) {
+    // number
     *--n = ival;
     *--n = Num;
     next();
     ty = INT;
   } else if (tk == '"') {
+    // string
     *--n = ival;
     *--n = Num;
     next();
+    // While current token is string constant, it is adjacent string
+    // constants, e.g. "abc" "def".
     while (tk == '"') next();
-    data = (char *)((int)data + sizeof(int) & -sizeof(int));
+    // Point `data` to next int-aligned address.
+    // This guarantees to leave at least one '\0' after the string.
+    data = reinterpret_cast<char *>(reinterpret_cast<int>(data) + sizeof(int) & -sizeof(int));
+
+    // Set result value type be char pointer.
     ty = PTR;
   } else if (tk == Sizeof) {
+    // If current token is `(`, read token, else print error and exit
+    // program.
     next();
-    if (tk == '(')
+    if (tk == '(') {
       next();
-    else {
+    } else {
       printf("%d: open paren expected in sizeof\n", line);
       exit(-1);
     }
     ty = INT;
-    if (tk == Int)
+    if (tk == Int) {
       next();
-    else if (tk == Char) {
+    } else if (tk == Char) {
       next();
       ty = CHAR;
     }
+
+    // While current token is `*`, it is pointer type.
+    // Add `PTR` to the operand value type.
     while (tk == Mul) {
       next();
       ty = ty + PTR;
     }
+
     if (tk == ')')
       next();
     else {
@@ -51,16 +67,19 @@ void Project::Parser::expr(int lev) {
     *--n = Num;
     ty = INT;
   } else if (tk == Id) {
+    // identifier
     d = id;
     next();
     if (tk == '(') {
+      // function call
       if (d[Class] != Sys && d[Class] != Fun) {
         printf("%d: bad function call\n", line);
         exit(-1);
       }
       next();
-      t = 0;
-      b = 0;
+      t = 0;  // arg count
+      b = 0;  // base addr
+      // Parse argument.
       while (tk != ')') {
         expr(Assign);
         *--n = (int)b;
@@ -68,21 +87,28 @@ void Project::Parser::expr(int lev) {
         ++t;
         if (tk == ',') next();
       }
+      // Skip `)`.
       next();
       *--n = t;
       *--n = d[Val];
-      *--n = (int)b;
+      // Store base address.
+      *--n = reinterpret_cast<int>(b);
       *--n = d[Class];
+      // Set result value type be the system call or function's return type.
       ty = d[Type];
     } else if (d[Class] == Num) {
+      // number
       *--n = d[Val];
       *--n = Num;
       ty = INT;
     } else {
+      // variable
       if (d[Class] == Loc) {
+        // Local variable.
         *--n = d[Val];
         *--n = Loc;
       } else if (d[Class] == Glo) {
+        // Global variable.
         *--n = d[Val];
         *--n = Num;
       } else {
@@ -93,10 +119,15 @@ void Project::Parser::expr(int lev) {
       *--n = Load;
     }
   } else if (tk == '(') {
+    // Cast or expression in paren.
     next();
     if (tk == Int || tk == Char) {
+      // cast
       t = (tk == Int) ? INT : CHAR;
       next();
+
+      // While current token is `*`, it is pointer type.
+      // Add `PTR` to the cast's data type.
       while (tk == Mul) {
         next();
         t = t + PTR;
@@ -107,78 +138,102 @@ void Project::Parser::expr(int lev) {
         printf("%d: bad cast\n", line);
         exit(-1);
       }
+
+      // Parse casted expression.
+      // Use `Inc` to allow only `++`, `--`, `[]` operators in the expression.
       expr(Inc);
       ty = t;
     } else {
+      // expr in paren
       expr(Assign);
-      if (tk == ')')
+      if (tk == ')') {
         next();
-      else {
+      } else {
         printf("%d: close paren expected\n", line);
         exit(-1);
       }
     }
   } else if (tk == Mul) {
+    // dereference
     next();
+
+    // Parse operand expression.
+    // Use `Inc` to allow only `++`, `--`, `[]` operators in the expression.
     expr(Inc);
-    if (ty > INT)
+    if (ty > INT) {
       ty = ty - PTR;
-    else {
+    } else {
       printf("%d: bad dereference\n", line);
       exit(-1);
     }
     *--n = ty;
     *--n = Load;
   } else if (tk == And) {
+    // address-of
     next();
+
+    // Parse operand expression.
+    // Use `Inc` to allow only `++`, `--`, `[]` operators in the expression.
     expr(Inc);
-    if (*n == Load)
+    if (*n == Load) {
       n = n + 2;
-    else {
+    } else {
       printf("%d: bad address-of\n", line);
       exit(-1);
     }
+
+    // Set result value type be pointer to current value type.
     ty = ty + PTR;
   } else if (tk == '!') {
     next();
+
+    // Parse operand expression.
+    // Use `Inc` to allow only `++`, `--`, `[]` operators in the expression.
     expr(Inc);
-    if (*n == Num)
+    if (*n == Num) {
+      // Optimization the constant to it's negative.
       n[1] = !n[1];
-    else {
+    } else {
+      // Can not optimize.
       *--n = 0;
       *--n = Num;
       --n;
-      *n = (int)(n + 3);
+      *n = reinterpret_cast<int>(n + 3);
       *--n = Eq;
     }
     ty = INT;
   } else if (tk == '~') {
+    // similar as before
     next();
     expr(Inc);
-    if (*n == Num)
+    if (*n == Num) {
+      // Optimization
       n[1] = ~n[1];
-    else {
+    } else {
       *--n = -1;
       *--n = Num;
       --n;
-      *n = (int)(n + 3);
+      *n = reinterpret_cast<int>(n + 3);
       *--n = Xor;
     }
     ty = INT;
   } else if (tk == Add) {
+    // Do nothing due to `+` has no effect.
     next();
     expr(Inc);
     ty = INT;
   } else if (tk == Sub) {
+    // same as before
     next();
     expr(Inc);
-    if (*n == Num)
+    if (*n == Num) {
+      // Optimization
       n[1] = -n[1];
-    else {
+    } else {
       *--n = -1;
       *--n = Num;
       --n;
-      *n = (int)(n + 3);
+      *n = reinterpret_cast<int>(n + 3);
       *--n = Mul;
     }
     ty = INT;
@@ -368,7 +423,7 @@ void Project::Parser::expr(int lev) {
           *--n = sizeof(int);
           *--n = Num;
           --n;
-          *n = (int)(n + 3);
+          *n = reinterpret_cast<int>(n + 3);
           *--n = Mul;
         }
       }
@@ -388,7 +443,7 @@ void Project::Parser::expr(int lev) {
           *--n = sizeof(int);
           *--n = Num;
           --n;
-          *n = (int)(n + 3);
+          *n = reinterpret_cast<int>(n + 3);
           *--n = Mul;
         }
       }
@@ -441,6 +496,7 @@ void Project::Parser::expr(int lev) {
       *--n = (tk == Inc) ? Sub : Add;
       next();
     } else if (tk == Brak) {
+      // array subscript []
       next();
       expr(Assign);
       if (tk == ']')
@@ -450,22 +506,24 @@ void Project::Parser::expr(int lev) {
         exit(-1);
       }
       if (t > PTR) {
-        if (*n == Num)
+        if (*n == Num) {
+          // Optimization
           n[1] = n[1] * sizeof(int);
-        else {
+        } else {
           *--n = sizeof(int);
           *--n = Num;
           --n;
-          *n = (int)(n + 3);
+          *n = reinterpret_cast<int>(n + 3);
           *--n = Mul;
         }
       } else if (t < PTR) {
         printf("%d: pointer type expected\n", line);
         exit(-1);
       }
-      if (*n == Num && *b == Num)
+      if (*n == Num && *b == Num) {
+        // Optimization
         n[1] = b[1] + n[1];
-      else {
+      } else {
         *--n = (int)b;
         *--n = Add;
       }
