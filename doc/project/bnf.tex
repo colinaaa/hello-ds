@@ -1,0 +1,241 @@
+\chapter{系统详细设计}
+
+% 指作者对自己的研究工作的详细表述。
+% 要求论理正确、论据确凿、逻辑性强、层次分明、表达确切
+
+\section{语法的巴克斯范式定义}
+
+下面根据巴克斯范式定义编译器系统所支持的C语言子集
+\footnote{使用EBNF能够更简单地对语言进行描述，
+	但纯粹的BNF格式对编写代码有比较好的帮助作用，因此这里使用纯粹的BNF格式}。
+任务书中要求的全部特性均满足，并且在其基础上增加了：
+\begin{itemize}
+	\item 各种单目运算符（包括取地址运算符）
+	\item 完全的指针类型（不限制级别）
+	\item 枚举类型（{\tt enum}）
+	\item 各种位运算符
+	\item 类型转换
+	\item 三目运算符
+\end{itemize}
+
+与语法分析相同，我们采用自顶向下的定义方式。
+
+\subsection{程序的基本结构}
+
+对于一个C语言程序源文件来说，它其实只由两部分组成：{\bf 声明}(declaration)
+和{\bf 函数定义}(function-definition)，
+因此其巴克斯范式定义如\autoref{bnf:program}所示。
+
+\begin{bnf}
+	\bnfprod{program}{\bnfpn{declaration}\bnfsp\bnfts{;}\bnfor\bnfpn{function-definition}}\label{bnf:program}
+\end{bnf}
+
+\subsection{声明与函数定义的巴斯克范式定义}
+
+\paragraph{声明}
+声明包括了函数的声明和外部变量的声明，其定义如\autoref{bnf:declaration}至\autoref{bnf:type}所示。
+% declaration
+\begin{bnf}
+	\bnfprod{declaration}
+	{\bnfpn{type-spec}\bnfsp\bnfpn{variable-declaration-list}}\label{bnf:declaration}\\
+	\bnfmore{\bnfor\bnfpn{type-spec}\bnfsp\bnfpn{id}\bnfsp\bnfts{(}\bnfsp\bnfpn{param-list}\bnfsp\bnfts{)}}\\
+	\bnfmore{\bnfor\bnfpn{enum-spec}}\\
+	% ------------------ %
+	\bnfprod{variable-declaration-list}
+	{\bnfpn{id}}\\
+	\bnfmore{\bnfor\bnfpn{variable-declaration-list}\bnfsp\bnfts{,}\bnfsp\bnfpn{id}}\\
+	% ------------------ %
+	\bnfprod{param-list}
+	{\bnfpn{param-list}\bnfsp\bnfts{,}\bnfsp\bnfpn{param}}\\
+	\bnfmore{\bnfor\bnfpn{param}}\\
+	% ------------------ %
+	\bnfprod{param}
+	{\bnfpn{type}\bnfsp\bnfpn{id}}\\
+	% ------------------ %
+	\bnfprod{type-spec}
+	{\bnfpn{type}\bnfor\bnfts{void}}\\
+	\bnfprod{type}
+	{\bnfts{char}\bnfor\bnfts{int}}\\
+	\bnfmore{\bnfor\bnfpn{type}\bnfsp\bnfts{*}}\label{bnf:type}
+\end{bnf}
+
+\paragraph{函数定义}
+函数定义的定义则如\autoref{bnf:func}所示，其函数体由大括号包含的若干条语句组成
+（当然可以为空\footnote{\bnfes 表示空}）。
+% function-definition
+\begin{bnf}
+	\bnfprod{function-definition}
+	{\bnfpn{type-spec}\bnfsp\bnfpn{id}\bnfsp\bnfts{(}\bnfsp\bnfpn{param-list}\bnfsp\bnfts{)}\bnfsp\bnfts{\{}\bnfsp\bnfpn{statement-list}\bnfsp\bnfts{\}}}\label{bnf:func}\\
+	\bnfprod{statement-list}
+	{\bnfes\bnfor\bnfpn{statement}\bnfor\bnfpn{statement-list}\bnfsp\bnfpn{statement}}
+\end{bnf}
+
+\subsection{枚举类型的巴斯克范式定义}
+
+\paragraph{枚举类型}
+枚举类型的定义如下所示
+% enum related
+\begin{bnf}
+	\bnfprod{enum-spec}
+	{\bnfts{enum} \bnfsp \bnfpn{id}\bnfsp \bnfts{\{} \bnfsp \bnfpn{enumerator-list} \bnfsp \bnfts{\}}}\\
+	\bnfmore{\bnfor \bnfts{enum} \bnfsp\bnfts{\{}\bnfsp\bnfpn{enumerator-list}\bnfsp\bnfts{\}}}\\
+	\bnfmore{\bnfor \bnfts{enum} \bnfsp \bnfpn{id}}\\
+	% ------------------ %
+	\bnfprod{enumerator-list}
+	{\bnfpn{enumerator}}\\
+	\bnfmore{\bnfor\bnfpn{enumerator-list}\bnfsp\bnfts{,}\bnfsp\bnfpn{enumerator}}\\
+	% ------------------ %
+	\bnfprod{enumerator}
+	{\bnfpn{id}}\\
+	\bnfmore{\bnfor \bnfpn{id}\bnfsp\bnfts{=}\bnfsp\bnfpn{const-expression}}
+\end{bnf}
+
+\subsection{语句和表达式的巴斯克范式定义}
+
+\paragraph{语句}
+语句是C语言较为基本的语言模块，作为过程型语言，其一条条语句执行的特点影响了后面的很多语言。
+
+本编译器系统支持的语句有：
+\begin{itemize}
+	\item {\tt if}语句
+	\item {\tt while}语句
+	\item {\tt for}语句
+	\item 赋值语句
+	\item 局部变量声明语句
+	\item {\tt return}语句
+	\item 表达式语句
+	\item 复合语句
+	\item 空语句
+\end{itemize}
+这里给出的顺序与下面的定义分别对应。
+% statement
+\begin{bnf}
+	%------------------------%
+	\bnfprod{statement}
+	{\bnfpn{if-statement}}\\
+	\bnfmore{\bnfor\bnfpn{while-statement}}\\
+	\bnfmore{\bnfor\bnfpn{for-statement}}\\
+	\bnfmore{\bnfor\bnfpn{assign-statement}}\\
+	\bnfmore{\bnfor\bnfpn{local-decl-statement}}\\
+	\bnfmore{\bnfor\bnfpn{return-statement}}\\
+	\bnfmore{\bnfor\bnfpn{expr-statement}}\\
+	\bnfmore{\bnfor\bnfts{\{}\bnfsp\bnfpn{statement}\bnfsp\bnfts{\}}}\\
+	\bnfmore{\bnfor\bnfts{;}}
+\end{bnf}
+
+% all-kinds of statement
+\begin{bnf*}
+	\bnfprod{if-statement}
+	{\bnfts{if}\bnfsp\bnfts{(}\bnfsp\bnfpn{expression}\bnfsp\bnfts{)}\bnfsp\bnfpn{statement}}\\
+	\bnfmore{\bnfor\bnfts{if}\bnfsp\bnfts{(}\bnfsp\bnfpn{expression}\bnfsp\bnfts{)}\bnfsp\bnfpn{statement}\bnfsp\bnfts{else}\bnfsp\bnfpn{if-statement}}\\
+	\bnfmore{\bnfor\bnfts{if}\bnfsp\bnfts{(}\bnfsp\bnfpn{expression}\bnfsp\bnfts{)}\bnfsp\bnfpn{statement}\bnfsp\bnfts{else}\bnfsp\bnfpn{statement}}\\
+	\bnfprod{while-statement}
+	{\bnfts{while}\bnfsp\bnfts{(}\bnfsp\bnfpn{expression}\bnfsp\bnfts{)}\bnfsp\bnfpn{statement}}\\
+	\bnfprod{for-statement}
+	{\bnfts{for}\bnfsp\bnfts{(}\bnfsp\bnfpn{expression}\bnfsp\bnfts{;}\bnfsp\bnfpn{expression}\bnfsp\bnfts{;}\bnfsp\bnfpn{expression}\bnfsp\bnfts{)}\bnfsp\bnfpn{statement}}\\
+	\bnfprod{assign-statement}{\bnfpn{id}\bnfsp\bnfts{=}\bnfsp\bnfpn{expression}\bnfsp\bnfts{;}}\\
+	\bnfprod{local-decl-statement}{\bnfpn{type}\bnfsp\bnfpn{id}\bnfsp\bnfts{=}\bnfsp\bnfpn{expression}\bnfsp\bnfts{;}}\\
+	\bnfprod{return-statement}
+	{\bnfts{return}\bnfsp\bnfpn{expression}\bnfsp\bnfts{;}}\\
+	\bnfmore{\bnfor\bnfts{return}\bnfsp\bnfts{;}}\\
+	\bnfprod{expr-statement}{\bnfpn{expression}\bnfsp\bnfts{;}}
+\end{bnf*}
+
+\paragraph{表达式}
+表达式是组成语句的基本模块，其组合方式十分多样，可由标量（scalar）、标识符（id），
+以及它们的组合和它们和各种运算符（operator）的组合构成。
+本编译器系统支持：
+\begin{itemize}
+	\item 双目运算符构成的语句
+	\item 单目运算符构成的语句
+	\item 三目运算符语句（问号语句）
+	\item 由括号扩起来的语句
+	\item 类型转换语句
+	\item 标识符语句
+	\item 标量语句
+\end{itemize}
+这里给出的顺序与下面的定义分别对应。
+
+% expression
+\begin{bnf}
+	\bnfprod{expression}
+	{\bnfpn{expression}\bnfsp\bnfpn{binary-opertor}\bnfsp\bnfpn{expression}}\\
+	\bnfmore{\bnfor\bnfpn{unary-opertor}\bnfsp\bnfpn{expression}}\\
+	\bnfmore{\bnfor\bnfpn{expression}\bnfsp\bnfts{?}\bnfsp\bnfpn{expression}\bnfsp\bnfts{:}\bnfsp\bnfpn{expression}}\\
+	\bnfmore{\bnfor\bnfts{(}\bnfsp\bnfpn{expression}\bnfsp\bnfts{)}}\\
+	\bnfmore{\bnfor\bnfts{(}\bnfsp\bnfpn{expression}\bnfsp\bnfts{)}\bnfsp\bnfpn{expression}}\\
+	\bnfmore{\bnfor\bnfpn{id}}\\
+	\bnfmore{\bnfor\bnfpn{scalar}}
+\end{bnf}
+
+其中，双目运算符包括
+\begin{itemize}
+	\itme 算数运算符
+	\item 比较运算符
+	\item 逻辑运算符
+	\item 位运算符
+\end{itemize}
+
+其定义如下：
+% binary operator
+\begin{bnf*}
+	\bnfprod{binary-operator}
+	{\bnfts{+}}\\
+	\bnfmore{\bnfor\bnfts{-}}\\
+	\bnfmore{\bnfor\bnfts{*}}\\
+	\bnfmore{\bnfor\bnfts{/}}\\
+	\bnfmore{\bnfor\bnfts{\%}}\\
+	\bnfmore{\bnfor\bnfts{<}}\\
+	\bnfmore{\bnfor\bnfts{>}}\\
+	\bnfmore{\bnfor\bnfts{<=}}\\
+	\bnfmore{\bnfor\bnfts{>=}}\\
+	\bnfmore{\bnfor\bnfts{!=}}\\
+	\bnfmore{\bnfor\bnfts{==}}\\
+	\bnfmore{\bnfor\bnfts{\&\&}}\\
+	\bnfmore{\bnfor\bnfts{||}}\\
+	\bnfmore{\bnfor\bnfts{\&}}\\
+	\bnfmore{\bnfor\bnfts{|}}\\
+	\bnfmore{\bnfor\bnfts{\^{}}}
+\end{bnf*}
+
+单目运算符定义如下：
+% unary operator
+\begin{bnf*}
+	\bnfprod{unary-opertor}
+	{\bnfts{-}}\\
+	\bnfmore{\bnfor\bnfts{+}}\\
+	\bnfmore{\bnfor\bnfts{!}}\\
+	\bnfmore{\bnfor\bnfts{\~{}}}\\
+	\bnfmore{\bnfor\bnfts{++}}\\
+	\bnfmore{\bnfor\bnfts{--}}\\
+	\bnfmore{\bnfor\bnfts{*}}\\
+	\bnfmore{\bnfor\bnfts{\&}}
+\end{bnf*}
+
+\subsection{其他定义}
+
+在上面的定义过程中，用到了其他的定义如下：
+\begin{bnf}
+	\bnfprod{type}
+	{\bnfts{char}\bnfor\bnfts{int}}\\
+	\bnfmore{\bnfor\bnfpn{type}\bnfsp\bnfts{*}}\\
+	\bnfprod{id}
+	{\bnfpn{letter}}\\
+	\bnfmore{\bnfor\bnfpn{id}\bnfsp\bnfpn{letter}}\\
+	\bnfmore{\bnfor\bnfpn{id}\bnfsp\bnfpn{digit}}\\
+	\bnfmore{\bnfor\bnfpn{id}\bnfsp\bnfts{\_}}\\
+	\bnfprod{letter}
+	{\bnfts{a}\bnfsk\bnfts{z}\bnfor\bnfts{A}\bnfsk\bnfts{Z}}\\
+	\bnfprod{digit}
+	{\bnfts{0}\bnfsk\bnfts{9}}\\
+	\bnfprod{scalar}
+	{\bnfpn{number}\bnfor\bnfpn{string}}\\
+	\bnfprod{number}
+	{\bnftd{decimal number}\bnfor\bnftd{octal number}\bnfor\bnftd{hexital number}}\\
+	\bnfprod{string}
+	{\bnfts{"}\bnfsp\bnftd{0 or more letter}\bnfsp\bnfts{"}}
+\end{bnf}
+
+至此，本编译器支持的C语言子集就定义完成了。可以看出，我们这个定义还是比较完善的
+一个C语言子集，绝大多数功能都能够实现（如{\tt struct}可通过指针+offset的方式实现）。
+% end
