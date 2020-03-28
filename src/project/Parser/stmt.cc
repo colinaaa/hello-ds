@@ -130,6 +130,8 @@ void Project::Parser::stmt() {
     if (tk != ';') {
       printf("%d: semicolon expected\n", line);
       exit(-1);
+    } else {
+      next();
     }
     a = nullptr;
     *--n = reinterpret_cast<int>(a);
@@ -139,6 +141,8 @@ void Project::Parser::stmt() {
     if (tk != ';') {
       printf("%d: semicolon expected\n", line);
       exit(-1);
+    } else {
+      next();
     }
     a = nullptr;
     *--n = reinterpret_cast<int>(a);
