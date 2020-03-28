@@ -74,7 +74,27 @@
 \paragraph{{\tt run.cc}}
 \inputminted[linenos=true]{cpp}{../../src/project/Parser/run.cc}
 
-\chapter{测试用例}\label{ch:test}
+\chapter{测试源代码及测试用例}\label{ch:test}
+\section{测试源代码}
+\paragraph{{\tt lex\_test.cc}}
+\inputminted[linenos=true]{cpp}{../../test/project/lex_test.cc}
+\paragraph{{\tt basic\_test.cc}}
+\inputminted[linenos=true]{cpp}{../../test/project/basic_test.cc}
+\paragraph{{\tt stmt\_test.cc}}
+\inputminted[linenos=true]{cpp}{../../test/project/stmt_test.cc}
+\paragraph{{\tt errors\_test.cc}}
+\inputminted[linenos=true]{cpp}{../../test/project/errors_test.cc}
+
+\section{测试用例}
+\inputminted[linenos=true]{json}{../../test/project/cases/lex.json}
+
+\inputminted[linenos=true]{cpp}{../../test/project/cases/basic.c}
+\inputminted[linenos=true]{cpp}{../../test/project/cases/for.c}
+\inputminted[linenos=true]{cpp}{../../test/project/cases/if.c}
+\inputminted[linenos=true]{cpp}{../../test/project/cases/while.c}
+
+\inputminted[linenos=true]{cpp}{../../test/project/cases/errors/e_enum_id.c}
+\inputminted[linenos=true]{cpp}{../../test/project/cases/errors/e_func_dup_para.c}
 
 \end{document}
 \endinput

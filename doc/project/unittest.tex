@@ -74,17 +74,50 @@ lcov是GCC覆盖率测试工具gcov的图形化前端。
 除了正确性分析外，我们还需要给出一些不正确的标记，例如{\tt 0abc}。词法分析器需要
 正确识别该标记的不合法性，并给出必要的提示。
 
+\autoref{lst:lextest}给出了词法分析器测试的主要代码，完整代码见\autoref{ch:test}。
+
+\begin{listing}[hbt]
+  \begin{minted}{cpp}
+  Project::Parser p;
+  const auto cases_f = {"lex.json"};
+  for (const auto &c : cases_f) {
+    std::ifstream cases_f(test_case_path / c);
+    json cases;
+    cases_f >> cases;
+    for (const auto &oneCase : cases) {
+      auto [input, want] = parseCase(oneCase);
+      REQUIRE(want == tokenName(p.parseToken(input)));
+    }
+  }
+  \end{minted}
+  \caption{词法分析器测试主要代码}\label{lst:lextest}
+\end{listing}
+
 \paragraph{语法分析器测试}
 
 语法分析器的测试方法与词法分析器类似，首先是正确性分析，给出一定的正确语句，
 通过语法分析器分析它，查看结果是否与预期相同。
-
 同时，也需要进行错误测试，检查语法分析器能否正确识别并处理错误。
+
+\autoref{lst:parsetest}给出了语法分析器测试的主要代码，完整代码见\autoref{ch:test}。
+
+\begin{listing}[hbt]
+  \begin{minted}{cpp}
+  const auto cases = {"if.c", "while.c", "for.c"};
+  for (const auto& c : cases) {
+    auto cmd = exec.string() + " " + (test_case_path / c).string();
+    auto [msg, ret_val] = exec_cmd(cmd.c_str());
+    REQUIRE(ret_val == 0);
+  }
+  \end{minted}
+  \caption{语法分析器测试主要代码}\label{lst:parsetest}
+\end{listing}
 
 \subsubsection{测试大纲}
 
 因为需要进行的测试比较多，因此使用JSON文件编写测试用例以及预期结果，
 然后测试时将其读入并进行反序列化，然后分别运行测试。
+部分测试用例的示例见\autoref{lst:json1}，
 完整的测试用例见\autoref{ch:test}。
 
 \begin{listing}[hbt]
@@ -108,7 +141,7 @@ lcov是GCC覆盖率测试工具gcov的图形化前端。
   },
 ]
 \end{minted}
-\caption{测试用例示例}
+\caption{测试用例示例}\label{lst:json1}
 \end{listing}
 
 \subsection{系统集成测试}
@@ -123,24 +156,24 @@ lcov是GCC覆盖率测试工具gcov的图形化前端。
 判断整个系统的输出是否与预期相同。
 
 \paragraph{错误处理测试}
-而在错误处理测试中，我同样给出若干存在问题的源文件，并通过JSON文件配置文件名及预期输出，
-然后通过自动化工具进行测试。
-
-\begin{listing}[hbt]
-\begin{minted}{json}
-[
-  {
-    "input": "e_for.c",
-    "error": "expr error",
-  },
-  {
-    "input": "e_while",
-    "error": "stmt error",
-  },
-]
-\end{minted}
-\caption{测试用例示例}
-\end{listing}
+而在错误处理测试中，同样给出若干存在问题的源文件，并通过自动化工具进行运行测试，
+查看是否在正确位置报错。
 
 \subsection{测试结果}
+
+测试结果如\autoref{fig:testres}所示，全部测试用例均通过测试。
+
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=.4]{test.png}
+  \caption{测试结果}\label{fig:testres}
+\end{figure}
+
+测试覆盖度见\autoref{fig:testcov}。
+\begin{figure}[hbt]
+  \centering
+  \includegraphics[scale=.3]{coverage.png}
+  \caption{测试覆盖度}\label{fig:testcov}
+\end{figure}
+
 % end
