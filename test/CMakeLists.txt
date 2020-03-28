@@ -8,4 +8,4 @@ add_subdirectory(lab/4)
 add_executable (Test main.cc)
 
 target_link_libraries(Test Catch2::Catch2 objlab1Test objlab2Test objlab3Test objlab4Test)
-
+target_link_libraries(Test nlohmann_json::nlohmann_json)

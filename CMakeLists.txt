@@ -45,7 +45,9 @@ add_subdirectory(lib/fmt)
 add_subdirectory(lib/docopt.cpp)
 add_subdirectory(lib/magic_enum)
 
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+add_subdirectory(lib/json)
 
 add_subdirectory (src)
 
-#add_subdirectory (test)
+add_subdirectory (test)

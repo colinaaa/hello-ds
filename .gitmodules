@@ -11,3 +11,6 @@
 [submodule "lib/magic_enum"]
 	path = lib/magic_enum
 	url = https://github.com/Neargye/magic_enum
+[submodule "lib/json"]
+	path = lib/json
+	url = https://github.com/nlohmann/json.git
