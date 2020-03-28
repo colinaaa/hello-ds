@@ -1,0 +1,122 @@
+[
+    {
+        "input": "123",
+        "want": "Num"
+    },
+    {
+        "input": "0xff   sdf",
+        "want": "Num"
+    },
+    {
+        "input": "abcd",
+        "want": "Id"
+    },
+    {
+        "input": "int",
+        "want": "Id"
+    },
+    {
+        "input": "while",
+        "want": "Id"
+    },
+    {
+        "input": "for",
+        "want": "Id"
+    },
+    {
+        "input": "enum",
+        "want": "Id"
+    },
+    {
+        "input": "char",
+        "want": "Id"
+    },
+    {
+        "input": "=",
+        "want": "Assign"
+    },
+    {
+        "input": "+",
+        "want": "Add"
+    },
+    {
+        "input": ">",
+        "want": "Gt"
+    },
+    {
+        "input": "<",
+        "want": "Lt"
+    },
+    {
+        "input": ">=",
+        "want": "Ge"
+    },
+    {
+        "input": "<=",
+        "want": "Le"
+    },
+    {
+        "input": ">>",
+        "want": "Shr"
+    },
+    {
+        "input": "<<",
+        "want": "Shl"
+    },
+    {
+        "input": "|",
+        "want": "Or"
+    },
+    {
+        "input": "&",
+        "want": "And"
+    },
+    {
+        "input": "^",
+        "want": "Xor"
+    },
+    {
+        "input": "&&",
+        "want": "Lan"
+    },
+    {
+        "input": "||",
+        "want": "Lor"
+    },
+    {
+        "input": "*",
+        "want": "Mul"
+    },
+    {
+        "input": "%",
+        "want": "Mod"
+    },
+    {
+        "input": "?",
+        "want": "Cond"
+    },
+    {
+        "input": "-",
+        "want": "Sub"
+    },
+    {
+        "input": "--",
+        "want": "Dec"
+    },
+    {
+        "input": "++",
+        "want": "Inc"
+    },
+    {
+        "input": "!=",
+        "want": "Ne"
+    },
+    {
+        "input": "==",
+        "want": "Eq"
+    },
+    {
+        "input": "/",
+        "want": "Div"
+    }
+]
