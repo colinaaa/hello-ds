@@ -1,5 +1,6 @@
 .PHONY: test
 test: debug
+	$(MAKE) -C build Test
 	./build/test/Test
 
 main: debug
@@ -13,25 +14,29 @@ dep:
 
 .PHONY: rebuild
 rebuild: build
-	rm -r build
-	make debug
+	rm -rf build
+	$(MAKE) debug
 
 .PHONY: ci
 ci: dep build debug cov valgrind
 
 .PHONY: debug
 debug: build dep
-	cd build; cmake -DCMAKE_BUILD_TYPE=Debug ../ ; make Test
+	cmake -DCMAKE_BUILD_TYPE=Debug -Bbuild
+	cmake --build build
 
 cov: cmake-build-cov dep
-	cd cmake-build-cov; cmake -DCMAKE_BUILD_TYPE=Coverage ../; make Test
+	cmake -DCMAKE_BUILD_TYPE=Coverage -Bcmake-build-cov
+	cmake --build cmake-build-cov
 	./cmake-build-cov/test/Test
 
 cmake-build-cov:
 	mkdir cmake-build-cov;
 
 valgrind: cmake-build-valgrind dep
-	cd cmake-build-valgrind; cmake -DCMAKE_BUILD_TYPE=Valgrind ../; make all && ./test/Test
+	cmake -DCMAKE_BUILD_TYPE=Valgrind -Bcmake-build-valgrind
+	cmake --build cmake-build-valgrind
+	./cmake-build-valgrind/test/Test
 
 cmake-build-valgrind:
 	mkdir cmake-build-valgrind
@@ -42,8 +47,9 @@ build:
 clean: cmake-build-cov cmake-build-valgrind build
 	rm -rf cmake-build-*
 	rm -rf build*
-	rm cov.info
+	rm -rf cov.info
 	rm -rf out
+	rm -rf *.dat
 
 # see: https://stackoverflow.com/questions/18136918/how-to-get-current-relative-directory-of-your-makefile
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -54,17 +60,19 @@ cov.info: cmake-build-cov
 	lcov --remove cov.info -o cov.info "$(ROOT_DIR)/lib/*"
 
 localcov: cmake-build-cov
-	rm -rf cmake-build-cov
-	make cov
-	make cov.info
+	$(MAKE) cov
+	$(MAKE) cov.info
 	genhtml -o out cov.info
 
 out: localcov
 	open out/index.html
 
 win: cmake-build-win
-	cd cmake-build-win; cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw.toolchain.cmake ../
-	make all
+	cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/mingw.toolchain.cmake -Bcmake-build-win
+	$(MAKE) -C cmake-build-win all
 
 cmake-build-win:
 	mkdir cmake-build-win
+
+cloc:
+	./cloc.sh
