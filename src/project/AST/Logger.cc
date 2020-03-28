@@ -15,7 +15,7 @@ void Project::Logger::log(const std::string& name, int childNumber) {
   std::cout << fmt::format("{:>{}} node\n", name, depth + name.size());
 
   while (childNumber != 0) {
-    _s.push(depth + indent);
+    s.push(depth + indent);
     childNumber--;
   }
 }

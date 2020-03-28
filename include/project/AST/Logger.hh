@@ -7,7 +7,7 @@
 namespace Project {
 class Logger {
  private:
-  std::stack<int> _s;
+  std::stack<int> s;
   const int defaultLength = 0;
   int indent = 2;
 
@@ -17,11 +17,11 @@ class Logger {
 
  private:
   inline int top() {
-    if (_s.empty()) {
+    if (s.empty()) {
       return defaultLength;
     }
-    int t = _s.top();
-    _s.pop();
+    int t = s.top();
+    s.pop();
     return t;
   }
 

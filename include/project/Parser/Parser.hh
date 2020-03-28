@@ -13,18 +13,17 @@ namespace Project {
 class Parser {
  private:
   char *p{}, *lp = nullptr,  // current position in source code
-      *data{};               // data/bss pointer
+      *data{};               // data pointer
 
   int *e,
       *le;  // current position in emitted code
 
   int *id = nullptr,  // currently parsed identifier
-      *n = nullptr,   // node of ast tree
-      *sym,           // symbol table (simple list of identifiers)
+      *n = nullptr,   // node of AST tree
+      *sym,           // symbol table
       tk = 0,         // current token
       ival = 0,       // current token value
       ty = 0,         // current expression type
-      loc = 0,        // local variable offset
       line;           // current line number
 
   // tokens and classes (operators last and in precedence order)
