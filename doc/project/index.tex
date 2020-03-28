@@ -5,7 +5,12 @@
 \usetikzlibrary{arrows}
 \usepackage[section]{placeins}
 \usepackage[altpo]{backnaur}
+\usepackage[outputdir=tmp,newfloat]{minted}
+\usepackage{forest}
 
+\usemintedstyle{xcode}
+\setminted{autogobble=true,breaklines=true}
+\SetupFloatingEnvironment{listing}{name=代码}
 % =============================== %
 
 \stuno{U201814468}
@@ -32,6 +37,7 @@
 \include{discourse}
 
 \include{analysis}
+\include{unittest}
 
 \include{summary}
 
@@ -48,6 +54,27 @@
 \bibliography{book}
 
 \appendix
+
+\chapter{源代码}\label{ch:src}
+
+\section{编译器源代码}
+
+\paragraph{{\tt Parser.cc}}
+\inputminted[linenos=true]{cpp}{../../src/project/Parser/Parser.cc}
+\paragraph{{\tt next.cc}}
+\inputminted[linenos=true]{cpp}{../../src/project/Parser/next.cc}
+\paragraph{{\tt expr.cc}}
+\inputminted[linenos=true]{cpp}{../../src/project/Parser/expr.cc}
+\paragraph{{\tt stmt.cc}}
+\inputminted[linenos=true]{cpp}{../../src/project/Parser/stmt.cc}
+\paragraph{{\tt logger.cc}}
+\inputminted[linenos=true]{cpp}{../../src/project/Parser/logger.cc}
+\paragraph{{\tt gen.cc}}
+\inputminted[linenos=true]{cpp}{../../src/project/Parser/gen.cc}
+\paragraph{{\tt run.cc}}
+\inputminted[linenos=true]{cpp}{../../src/project/Parser/run.cc}
+
+\chapter{测试用例}\label{ch:test}
 
 \end{document}
 \endinput

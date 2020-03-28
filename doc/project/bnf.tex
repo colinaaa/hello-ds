@@ -3,7 +3,7 @@
 % 指作者对自己的研究工作的详细表述。
 % 要求论理正确、论据确凿、逻辑性强、层次分明、表达确切
 
-\section{语法的巴克斯范式定义}
+\section{语法的巴克斯范式定义}\label{sec:bnf}
 
 下面根据巴克斯范式定义编译器系统所支持的C语言子集
 \footnote{使用EBNF能够更简单地对语言进行描述，
@@ -12,8 +12,9 @@
 \begin{itemize}
 	\item 各种单目运算符（包括取地址运算符）
 	\item 完全的指针类型（不限制级别）
-	\item 枚举类型（{\tt enum}）
+	\item 枚举类型（\mintinline{cpp}|enum|）
 	\item 各种位运算符
+	\item 移位运算符
 	\item 类型转换
 	\item 三目运算符
 \end{itemize}
@@ -61,7 +62,7 @@
 
 \paragraph{函数定义}
 函数定义的定义则如\autoref{bnf:func}所示，其函数体由大括号包含的若干条语句组成
-（当然可以为空\footnote{\bnfes 表示空}）。
+（当然可以为空\footnote{$\lambda$表示空}）。
 % function-definition
 \begin{bnf}
 	\bnfprod{function-definition}
@@ -97,12 +98,12 @@
 
 本编译器系统支持的语句有：
 \begin{itemize}
-	\item {\tt if}语句
-	\item {\tt while}语句
-	\item {\tt for}语句
+	\item \mintinline{cpp}|if|语句
+	\item \mintinline{cpp}|while|语句
+	\item \mintinline{cpp}|for|语句
 	\item 赋值语句
 	\item 局部变量声明语句
-	\item {\tt return}语句
+	\item \mintinline{cpp}|return|语句
 	\item 表达式语句
 	\item 复合语句
 	\item 空语句
@@ -170,7 +171,7 @@
 
 其中，双目运算符包括
 \begin{itemize}
-	\itme 算数运算符
+	\item 算数运算符
 	\item 比较运算符
 	\item 逻辑运算符
 	\item 位运算符
@@ -193,6 +194,8 @@
 	\bnfmore{\bnfor\bnfts{==}}\\
 	\bnfmore{\bnfor\bnfts{\&\&}}\\
 	\bnfmore{\bnfor\bnfts{||}}\\
+	\bnfmore{\bnfor\bnfts{<<}}\\
+	\bnfmore{\bnfor\bnfts{>>}}\\
 	\bnfmore{\bnfor\bnfts{\&}}\\
 	\bnfmore{\bnfor\bnfts{|}}\\
 	\bnfmore{\bnfor\bnfts{\^{}}}
@@ -237,5 +240,5 @@
 \end{bnf}
 
 至此，本编译器支持的C语言子集就定义完成了。可以看出，我们这个定义还是比较完善的
-一个C语言子集，绝大多数功能都能够实现（如{\tt struct}可通过指针+offset的方式实现）。
+一个C语言子集，绝大多数功能都能够实现（如\mintinline{cpp}|struct|可通过指针{\tt +offset}的方式实现）。
 % end

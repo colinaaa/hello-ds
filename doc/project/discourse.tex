@@ -1,4 +1,374 @@
 \section{有关数据结构的定义}
 
-\section{主要算法设计}
+\subsection{符号表定义}
 
+首先，编译器需要建立一个符号表，记录所有定义
+过的全局变量和函数，以确保不产生重名。
+
+符号表的定义我采用了线性表的方式，较为简单。
+每个符号由一个哈希函数被散列到一个整数值，
+顺序存储在线性表中。因为一个源文件中符号并不会很多，
+因此使用顺序表的性能不会太差，而比链表节省了
+许多空间，实现也更加简单。\autoref{lst:symbol}中为其定义。
+
+\begin{listing}[hbt]
+	\mint{cpp}|int *sym;|
+	\caption{符号表定义}\label{lst:symbol}
+\end{listing}
+
+\subsection{数据段定义}
+
+编译器需要建立一个数据段，记录所有的常量，
+静态变量等，与符号表类似，同样用线性表的方式实现。
+\autoref{lst:databss}中为其定义。
+
+\begin{listing}[hbt]
+	\mint{cpp}|int *data;|
+	\caption{数据段定义}\label{lst:databss}
+\end{listing}
+
+\subsection{词法分析器定义}
+
+词法分析器中的数据结构比较简单，如\autoref{lst:lexdef}所示。
+包含一个指针指向当前的字符，一个指针指向当前的行，
+一个指针指向当前标识符在符号表中的位置，
+一个整型值代表当前标记的种类，
+一个整型代表当前标记的值，
+一个整型代表当前标记的类型。
+
+\begin{listing}[hbt]
+	\begin{minted}{cpp}
+char *p;
+char *lp;
+int *id;
+int tk;
+int ival;
+int ty;
+\end{minted}
+	\caption{词法分析器定义}\label{lst:lexdef}
+\end{listing}
+
+\subsection{语法分析器定义}
+
+语法分析器需要频繁地调用词法分析器，并获得一些值，
+因此词法分析器中的数据语法分析器也可以访问，\autoref{lst:syntaxdef}为其定义。
+
+此外，语法分析器还需要生成抽象语法树，
+这主要通过一个栈来实现。
+每当遇到一个语素，分析得到它的类型及有关
+信息后，将其压入栈中。
+
+\begin{listing}[hbt]
+	\mint{cpp}|int *n;|
+	\caption{语法分析器定义}\label{lst:syntaxdef}
+\end{listing}
+
+这里没有使用结构体的原因如下：
+
+\begin{itemize}
+	\item 首先，我想实现编译器的自举，即自己能够编译
+	      自己。而因为语言定义中没有给出结构体的定义，所以
+	      这里就没有使用结构体。
+	\item 其次，使用栈的方式大大简化了代码。因为抽象
+	      语法树每个节点的孩子个数不定，因此需要使用孩子-兄弟
+	      表示法。然而这样会使得编写代码较为麻烦，且使用了很多
+	      不必要的空间。
+	\item 此外，我的栈中并非单纯存储数据，其中也存储了
+	      一些指针，这也有一部分链表和树的思想。但最主要
+	      还是通过栈的方式进行存储。
+\end{itemize}
+
+\subsection{抽象语法树打印器}
+
+由于抽象语法树由栈来实现，因此打印器也通过栈来实现。
+不同于抽象语法树，打印器的栈只需要存储其
+空白格的长度，行为较简单，无需自定义，
+因此使用了C++中的{\tt stack}容器。
+\autoref{lst:astdef}中为其定义。
+
+\begin{listing}[hbt]
+\mint{cpp}|std::stack<int> s;|
+\caption{抽象语法树定义}\label{lst:astdef}
+\end{listing}
+
+打印器还具有以下方法：
+
+\begin{listing}[hbt]
+\mint{cpp}|void log(const std::string&, int);|
+\caption{{\tt log}方法}
+\end{listing}
+
+{\tt log}方法，打印一个节点的信息，根据第二个参数调整
+缩进的大小。
+
+\begin{listing}[hbt]
+\mint{cpp}|int top();|
+\caption{{\tt top}方法}
+\end{listing}
+
+{\tt top}方法，如果栈中有元素则弹出该元素并返回其值，
+否则返回默认的缩进大小。
+
+\subsection{其他定义}\label{subsec:other_definition}
+
+除了上述模块的定义外，编译器还通过枚举类型定义了一些符号，
+主要用于关键字、运算符和类型。
+
+\begin{listing}[hbt]
+\begin{minted}{cpp}
+enum Token {  };
+enum Operator {  };
+enum Type { CHAR, INT, PTR };
+\end{minted}
+\caption{枚举类型定义}
+\end{listing}
+
+对于指针类型，最初是用统一的枚举类型{\tt PTR}来代表所有类型的指针，
+例如
+\mint{cpp}|id[Type] = PTR;|
+就代表{\tt id}的类型为指针类型，但究竟其指向的是整型还是另一个指针就不得而知。
+但后来我用一种方法对其进行了优化，详见\autoref{sec:optim}
+
+\section{主要算法设计}\label{sec:algorithm}
+
+\subsection{有限自动状态机}
+
+有限自动状态机的算法较为简单，其基本思想如\autoref{fig:lex_FSM}。
+主要复杂的部分在于定义其转移状态，而这一步在定义语言的过程中已经基本
+完成了。
+
+算法的主要结构如\autoref{alg:FSM}所示：
+
+\begin{algorithm}[hbt]
+	\caption{有限自动状态机算法}\label{alg:FSM}
+	\SetAlgoLined{}
+	\KwData{current token}
+	\KwResult{identify this token}
+	\SetKw{EOF}{EOF}
+	\SetKw{Return}{return}
+
+	\While{not encounter \EOF}{%
+		\uIf{token is number}{%
+			deal with number\;
+			\Return\;
+		}\uElseIf{token is string}{%
+			deal with string\;
+			\Return\;
+		}\uElseIf{token is identifier}{%
+			deal with identifier\;
+			\Return\;
+		}\ElseIf{token is operator}{%
+			deal with operator\;
+			\Return\;
+		}
+	}
+\end{algorithm}
+
+\subsection{递归下降}
+
+语法分析主要采用递归下降法进行分析。根据\autoref{sec:bnf}
+所定义的语法，可以发现如果从左向右来分析的话，
+可以完全确定对应的标记的类型，而不需要进行推测\cite{kernighan2006c}，
+这样的语言被称为{\it LL (k) 语言}。
+
+例如\autoref{lst:llk}：
+
+\begin{listing}[hbt]
+\mint{cpp}|for (i = 0; i < 5; ++i) {}|
+\caption{LL(k)语言示例}\label{lst:llk}
+\end{listing}
+
+它的分析结果如\autoref{fig:for}
+
+\begin{figure}[hbt]
+	\centering
+	\begin{forest}
+		[for,draw
+		[{=}[i][0]]
+		[<[i][5]]
+		[++[i]]
+		[{\{\}}]
+		]
+	\end{forest}
+	\caption{{\tt for}语句}\label{fig:for}
+\end{figure}
+
+在我们读到{\tt for}的时候，我们就能够确定这是一条
+for语句，其接下来的结构也很清楚，因此我们就可以
+使用自顶向下的递归下降的方式来进行语法分析\cite{aho1986compilers,kernighan2006c}，
+而不需要进行回溯分析。
+这种分析器被称为{\it LL(k) Parser}。
+
+算法的主要结构如\autoref{alg:recurive_down}所示：
+
+\begin{algorithm}[hbt]
+	\caption{递归下降算法}\label{alg:recurive_down}
+	\KwIn{string $\omega$}
+	\KwOut{left-most derivation of $\omega$ or error}
+	\BlankLine{}
+	\Begin{%
+		\Repeat{$\omega$ match some pattern}{%
+			read more of $\omega$\;
+		}
+		\uIf{match some statement}{%
+			get the pattern of statement\;
+			recursive go down following the pattern\;
+		}\uElseIf{match another statement}{%
+			recursive go down\;
+		}\Else{%
+			error\;
+		}
+	}
+\end{algorithm}
+
+就这样，我们通过自顶向下构建抽象语法树，最终将全部声明与定义
+组合在一个抽象语法森林中（或者可以给所有根节点一个共同的父亲）。
+如\autoref{fig:AST_forset}所示。
+
+\begin{figure}[hbt]
+	\centering
+	\begin{forest}
+		[
+		{some definition},draw[
+		\dots[
+			{some stmt}, draw
+				[\dots[{some expr}, draw][{some expr}, draw]]
+		][
+			{some stmt}, draw
+				[\dots[{some expr}, draw][{some expr}, draw]]
+		][
+			{some stmt}, draw
+				[\dots[{some expr}, draw][{some expr}, draw]]
+		]]]
+	\end{forest}
+
+	\caption{抽象语法森林}\label{fig:AST_forset}
+\end{figure}
+
+\section{系统优化}\label{sec:optim}
+
+在完成了要求的基础功能后，我还对编译器进行了一定程度的优化，
+使得它更加接近成熟的现代编译器。
+
+\subsection{常量优化}
+
+在源代码中，我们常常会看到像\autoref{lst:constexpr}这样的表达式：
+
+\begin{listing}[hbt]
+\mint{cpp}|1 << 10, !(~(0xff & -1))|
+\caption{常量表达式}\label{lst:constexpr}
+\end{listing}
+
+其中所有的操作数都是常数，因此这个表达式的值是可以在编译期间被完全确定下来的。
+因此，我们完全没有必要将整个表达式都放在抽象语法树中，而是可以直接计算出结果，
+并用结果作为一个标量表达式来替换原表达式的结果%
+\footnote{这里说的替换并不是先建立抽象语法树再进行优化、替换，而是在建立语法树的同时就做了替换}。
+这也是现代编译器普遍具有的一个常见优化\cite{appel2004modern,aho1986compilers,Advanced-compiler-optim}。
+
+\subsection{语义分析优化}\label{subsec:semantic}
+
+如同\autoref{subsec:analysis}所述，经过语法分析后，编译器已经完全了解源代码所要
+表达的含义，然而这仍然是不足的。就针对于C语言来说，你的语法正确了，并不代表你的
+程序一定是正确的。例如\autoref{lst:semanticerror}
+
+\begin{listing}[hbt]
+\begin{minted}{cpp}
+void foo() {
+  return 0; // error!
+}
+\end{minted}
+\caption{语义错误示例}\label{lst:semanticerror}
+\end{listing}
+
+上面这个{\tt foo}函数单单从语法上来说，完全符合定义，没有问题。
+然而，它的返回类型为\mintinline{cpp}|void|，本不应该返回任何值，
+但它的函数体中却返回了一个整型{\tt 0}。这就出现了典型的语义错误 (semantic error)。
+
+再比如\autoref{lst:semanticerror2}这个例子：
+\begin{listing}[hbt]
+\begin{minted}{cpp}
+void foo() {
+  return;
+}
+void bar() {
+  int x;
+  x = foo(); // error!
+}
+\end{minted}
+\caption{语义错误示例}\label{lst:semanticerror2}
+\end{listing}
+
+在{\tt bar()}函数的函数体内，一个对整型变量的赋值发生了明显的错误，因为{\tt foo()}
+函数的返回值为\mintinline{cpp}|void|。然而在语法上，上面这个例子完全正确。这也再一次体现了，
+只有词法分析和语法分析是无法保证源代码的正确性的。
+
+以上给出的例子都是会使代码完全崩溃的例子，当然也有诸如隐式类型转换这种C语言标准
+允许，但可能会导致程序出现错误的问题存在。这些都是属于语义分析所能够解决的问题。
+研究表面，目前现代编译器对于词法和语法的分析基本都能做到很完善，差距就体现在后端生成代码
+的质量和前端语义分析的智能程度。作为一名编译器使用者，这也就体现在编译器是否能够
+帮助你尽可能地降低发生错误的概率。
+
+例如这段代码：
+\begin{listing}[hbt]
+\begin{minted}{cpp}
+int sum, a, b;
+sum = a + b;
+\end{minted}
+\caption{语义分析示例}
+\end{listing}
+
+经过语义分析后，编译器可以得到以下信息：
+
+\begin{figure}[hbt]
+	\centering
+	\begin{forest}
+		[
+			{=}
+				[{number\\[-2ex]\scriptsize sum},align=center]
+				[
+					{+}
+						[{number\\[-2ex]\scriptsize a},align=center]
+						[{number\\[-2ex]\scriptsize b},align=center]
+				]
+		]
+	\end{forest}
+	\caption{语义分析}
+\end{figure}
+
+就可以根据这些信息判断这个语句不仅仅在语法上正确，并且在语义上也正确。
+
+当然，我的语义分析还不够完善，不能够保证能分析出全部的语义错误，但是对于简单的
+错误还是能够分析出来，并给出相应的提示或警告。
+
+\subsection{类型优化}
+
+C语言作为一个静态类型语言，每一个变量都有其相对应的元素可谓是其一大特点。
+尽管编译为目标代码后并不存在类型的问题，但如果具有类型，可以使\autoref{subsec:semantic}
+所述的语义分析更加准确，能够在编译器规避更多可能发生的错误。
+
+在刚刚完成系统时，如\autoref{subsec:other_definition}所述，我的编译器对指针的支持
+仅仅停留在general pointer的层面。也就是说所有指针是同一个类型，不论它指向的是
+字符型还是整型变量或者是另一个指针变量。这确实符合C语言标准，因为所有指针在字节
+层面上确实是完全相同的类型\cite{kernighan2006c}。然而，如果能够知道一个指针所指向
+变量的类型，就能够作出更精确的语义分析，能够帮助程序员规避可能发生的错误。
+
+于是，我对类型进行了一些优化。对于一个指向基本类型（不包括指针的类型）的指针，
+它的类型值就为该基本类型对应的值加上{\tt PTR}。而对于一个指向指针的指针，其类型值
+就再加上{\tt PTR}。而\mintinline{cpp}|void|型的指针的类型值则直接为{\tt PTR}。
+
+举例来说：
+
+\begin{listing}[hbt]
+\begin{minted}{cpp}
+enum Type { CHAR, INT, PTR };
+int x;        // id[Type] == INT
+int *ptr;     // id[Type] == INT + PTR
+int **pptr;   // id[Type] == INT + PTR + PTR
+void *rptr;   // id[Type] == PTR
+\end{minted}
+\caption{类型优化}
+\end{listing}
+
+经此优化，编译器便支持了带有类型的指针，同时也支持了空指针和多重指针。因此能
+在语义分析中做的更准确，更好地提供辅助作用。
+% end

@@ -1,1 +1,157 @@
-\chapter{结果分析}
+\chapter{系统实现与测试}
+
+\section{系统实现}
+
+\subsection{开发环境}
+
+主要的开发环境如下：
+
+\begin{itemize}
+	\item 系统环境：MacOS Catalina 10.15.3 Darwin Kernel Version 19.3.0
+	\item 编译器：Apple clang version 11.0.0 (clang-1100.0.33.17)
+	\item 自动构建工具：cmake version 3.16.5
+	\item 编辑器：NVIM v0.4.3
+	\item 标准库版本：libc++ 11.0.0
+\end{itemize}
+
+此外，系统还有部分开发在Linux下完成，开发环境如下：
+
+\begin{itemize}
+	\item 系统环境：GNU/Linux Arch Linux-5.5.9.arch1-2
+	\item 编译器：g++ (Arch Linux 9.3.0-1) 9.3.0
+	\item 自动构建工具：cmake version 3.16.5
+	\item 编辑器：NVIM v0.4.3
+	\item 标准库版本：glibc 2.31-2
+\end{itemize}
+
+由于手边没有Windows系统电脑，不确定是否能在Windows下编译运行。
+
+\subsection{交互实现}
+
+系统采用命令行交互，与大多现代编译器相同，支持诸多命令行参数。
+默认情况下，如果源代码没有问题，则自动退出，无任何输出。
+
+若指定{\tt -t}选项，则会输出源程序的抽象语法树。
+其中，{\tt -i}选项可以指定抽象语法树每一层缩进的大小。
+
+若指定{\tt -o}选项，则会将源代码输出至指定文件。
+
+\paragraph{{\tt main}函数}
+
+首先解析命令行参数，并将选项通过\autoref{lst:cmdinterface}中的接口传入编译器。
+
+\begin{listing}[htb]
+\begin{minted}{cpp}
+void setSrc(const bool v = true);
+void setDebug(const bool v = true);
+void setTree(const bool v = true);
+void setIndent(const int v);
+void setOutputName(const std::string &v);
+void setOutput(const bool v = true);
+\end{minted}
+\caption{命令行选项接口}\label{lst:cmdinterface}
+\end{listing}
+
+接着，通过{\tt run}函数指定要编译的源文件，并开始编译。
+
+\mint{cpp}|int run (const std::string &filename);|
+
+\subsection{词法分析器实现}
+
+词法分析器主要由一个函数\mintinline{cpp}|void next()|实现。
+
+
+{\tt next()}读取对象的{\tt tk, p, pp}等变量的值，并按照\autoref{alg:FSM}
+进行词法分析，判定当前标记对应的类型，并将对应的值存储在变量{\tt tk}中。
+
+\begin{listing}[hbt]
+\begin{minted}{cpp}
+void next() {
+  if (tk == '\n') {
+    // newline
+  } else if (tk == '#') {
+    // deal with marco
+  } else if (tk >= '0' && tk <= '9') {
+    // deal with number
+  }
+  // ...
+  else {
+    // unknown token
+  }
+}
+\end{minted}
+\caption{词法分析器实现}\label{lst:leximpl}
+\end{listing}
+
+\autoref{lst:leximpl}中省略了其中繁琐的分支判断和每条分支中自动状态机的状态转换，
+详细代码见\autoref{ch:src}。
+
+\subsection{语法分析器实现}
+
+语法分析器主要由两个函数构成，\mintinline{cpp}|void expr(int level)|和
+\mintinline{cpp}|void stmt()|，分别对表达式和语句进行分析。
+
+\paragraph{语句分析}
+
+\begin{listing}[hbt]
+\begin{minted}{cpp}
+void stmt() {
+  if (tk == If) {
+    // deal with if statement
+    expr(Assign);
+    // ...
+    stmt();
+  } else if (tk == While) {
+    // deal with while statement
+    expr(Assign);
+    // ...
+    stmt();
+  }
+  // ...
+  else {
+    // unknown statement
+    // throw error
+  }
+}
+  \end{minted}
+  \caption{语法分析器-语句分析}
+\end{listing}
+
+在语句分析中，会递归调用表达式分析和语句分析来进行分析，于此同时，也会将
+收集到的信息放入抽象语法树中，供后续使用。
+
+由于不同的语句的结构很不同，因此需要手动编写每条语句递归程度。
+例如处理\mintinline{cpp}|for|语句的分支中需要调用三次{\tt expr()}进行表达式分析
+\footnote{判断括号中的三个语句是否正确}，
+需要调用四次{\tt next()}进行词法分析\footnote{判断括号和分号是否正确}，
+需要调用一次{\tt stmt()}进行语句分析。
+
+\paragraph{表达式分析}
+
+在表达式分析中，会递归调用表达式分析和词法分析来进行分析，于此同时，也会将
+收集到的信息放入抽象语法树中，供后续使用。
+
+\begin{listing}[hbt]
+  \begin{minted}{cpp}
+void expr(int lev) {
+  if (tk == Num) {
+    // deal with number
+    next();
+    // ...
+  } else if (tk == Id) {
+    // deal with identifier
+    next();
+    // ...
+  }
+  // ...
+  else {
+    // unknown expression
+  }
+}
+  \end{minted}
+  \caption{语法分析器-表达式分析}
+\end{listing}
+
+与语句分析一样，由于不同的表达式形式不同，也需要对不同的表达式进行单独分析。
+
+% end
