@@ -6,11 +6,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: dep
-      env: 
+      env:
         CI: gh
         CXX: clang++
         CC: clang
@@ -21,15 +21,15 @@ jobs:
         CXX: clang++
         CC: clang
       run: make main
-    - name: valgrind
+    # - name: valgrind
+    #   env:
+    #     CI: gh
+    #     CXX: clang++
+    #     CC: clang
+    #   run: make valgrind
+    - name: all
       env:
         CI: gh
         CXX: clang++
         CC: clang
-      run: make valgrind
-    - name: sanitizer
-      env:
-        CI: gh
-        CXX: clang++
-        CC: clang
-      run: make test
+      run: make ci

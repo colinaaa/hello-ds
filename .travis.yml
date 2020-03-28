@@ -21,8 +21,7 @@ env:
   - CI=travis
 script:
   - make dep
-  - make debug
-  - make cov
+  - make ci
   - make cov.info
 
 deploy:

@@ -15,7 +15,6 @@ SET(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} --cov
 set(CMAKE_CXX_FLAGS_VALGRIND "${CMAKE_CXX_FLAGS_DEBUG_INIT} -O0")
 if(DEFINED ENV{CI})
     include_directories(SYSTEM /usr/include/c++/8)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
 else()
     # local dev
     if(CMAKE_BUILD_TYPE STREQUAL Coverage)

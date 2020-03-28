@@ -18,15 +18,15 @@ rebuild: build
 	$(MAKE) debug
 
 .PHONY: ci
-ci: dep build debug cov valgrind
+ci: dep build test cov valgrind
 
 .PHONY: debug
 debug: build dep
-	cmake -DCMAKE_BUILD_TYPE=Debug -Bbuild .
+	cmake -DCMAKE_BUILD_TYPE=Debug -S . -B build
 	cmake --build build
 
 cov: cmake-build-cov dep
-	cmake -DCMAKE_BUILD_TYPE=Coverage -Bcmake-build-cov .
+	cmake -DCMAKE_BUILD_TYPE=Coverage -S . -B cmake-build-cov
 	cmake --build cmake-build-cov
 	./cmake-build-cov/test/Test
 
@@ -34,7 +34,7 @@ cmake-build-cov:
 	mkdir cmake-build-cov;
 
 valgrind: cmake-build-valgrind dep
-	cmake -DCMAKE_BUILD_TYPE=Valgrind -Bcmake-build-valgrind .
+	cmake -DCMAKE_BUILD_TYPE=Valgrind -S . -B cmake-build-valgrind
 	cmake --build cmake-build-valgrind
 	./cmake-build-valgrind/test/Test
 
