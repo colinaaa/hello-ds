@@ -49,5 +49,5 @@ auto main(int argc, char* argv[]) -> int {
     return -1;
   }
 
-  p.run(filename);
+  return p.run(filename);
 }

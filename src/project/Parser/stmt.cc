@@ -30,7 +30,7 @@ void Project::Parser::stmt() {
       stmt();
       c = n;
     } else {
-      c = 0;
+      c = nullptr;
     }
     *--n = reinterpret_cast<int>(c);
     *--n = reinterpret_cast<int>(b);
@@ -66,6 +66,7 @@ void Project::Parser::stmt() {
       next();
     } else {
       printf("%d: close paren expected\n", line);
+      exit(-1);
     }
     stmt();
     *--n = reinterpret_cast<int>(a);

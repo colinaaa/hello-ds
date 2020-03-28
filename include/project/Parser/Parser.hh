@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <memory>
 #include <string>
 
 #include "AST/Logger.hh"
@@ -27,6 +28,7 @@ class Parser {
       line;           // current line number
 
   // tokens and classes (operators last and in precedence order)
+ public:
   enum Token {
     Num = 128,
     Fun,
@@ -75,12 +77,13 @@ class Parser {
   // operators codes
   enum Operator { OPEN, READ, CLOS, PRTF, MALC, FREE, MSET, MCMP, EXIT };
 
- private:
   // types
   enum Type { CHAR, INT, PTR };
 
   // identifier offsets
   enum Offset { Tk, Hash, Name, Class, Type, Val, HClass, HType, HVal, Idsz };
+
+ private:
   int poolSize = 256 * 1024;
 
  public:
@@ -123,6 +126,13 @@ class Parser {
   static inline auto getParamName(char *name) { return getTokenName(name, ','); }
 
   static inline auto tokenName(int tk);
+
+ public:
+  inline auto parseToken(std::string& t) {
+    p = t.data();
+    next();
+    return tk;
+  }
 };
 
 }  // namespace Project
