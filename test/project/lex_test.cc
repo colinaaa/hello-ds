@@ -16,12 +16,12 @@ auto parseCase(json::object_t oneCase) {
 }
 
 TEST_CASE("lex", "[project,lex]") {
-  REQUIRE(root.filename() == "hello-ds");
+  REQUIRE(root().filename() == "hello-ds");
   Project::Parser p;
-  const auto cases_f = {"lex.json"};
-  for (const auto &c : cases_f) {
+  const auto cases_fs = {"lex.json"};
+  for (const auto &c : cases_fs) {
     INFO("read file: " << c);
-    std::ifstream cases_f(test_case_path / c);
+    std::ifstream cases_f(test_case_path() / c);
     json cases;
     cases_f >> cases;
     for (const auto &oneCase : cases) {

@@ -8,10 +8,10 @@
 #include "util.hh"
 
 TEST_CASE("basic", "[basic]") {
-  REQUIRE(root.filename() == "hello-ds");
+  REQUIRE(root().filename() == "hello-ds");
   const auto cases = {"basic.c"};
   for (const auto &c : cases) {
-    auto cmd = exec.string() + " " + (test_case_path / c).string();
+    auto cmd = exec().string() + " " + (test_case_path() / c).string();
     INFO("executing: " << cmd);
     auto [msg, rtn_val] = exec_cmd(cmd.c_str());
     INFO("return code: " << rtn_val);

@@ -10,17 +10,26 @@
 
 #include "Parser/Parser.hh"
 
-const auto cwd = std::filesystem::current_path();
+inline auto cwd() {
+  static const auto cwd = std::filesystem::current_path();
+  return cwd;
+}
 
-const auto root = cwd.filename() == "hello-ds" ? cwd : cwd.parent_path();
+inline auto root() {
+  static const auto root =
+      cwd().filename() == "hello-ds"
+          ? cwd()
+          : cwd().filename() == "test" ? cwd().parent_path().parent_path() : cwd().parent_path();
+  return root;
+}
 
 #ifdef COVERAGE
-const auto exec = root / "cmake-build-cov" / "test" / "tcc";
+auto exec() { return root() / "cmake-build-cov" / "test" / "tcc"; }
 #else
-const auto exec = root / "build" / "tcc";
+inline auto exec() { return root() / "build" / "tcc"; }
 #endif
 
-const auto test_case_path = root / "test" / "project" / "cases";
+inline auto test_case_path() { return root() / "test" / "project" / "cases"; }
 
 inline auto exec_cmd(const char* cmd) -> std::pair<std::string, int> {
   std::array<char, 128> buffer{};
@@ -42,4 +51,4 @@ inline auto tokenName(int tk) {
   return magic_enum::enum_name(static_cast<Project::Parser::Token>(tk));
 }
 
-#endif  // TEST_TUIL_HH
+#endif  // TEST_UTIL_HH
