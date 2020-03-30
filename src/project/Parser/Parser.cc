@@ -7,11 +7,11 @@ Project::Parser::Parser() : line(1) {
     printf("could not malloc(%lld) symbol area\n", poolSize);
     exit(-1);
   }
-  if ((le = e = static_cast<int*>(malloc(poolSize))) == nullptr) {
+  if ((e = static_cast<int*>(malloc(poolSize))) == nullptr) {
     printf("could not malloc(%lld) text area\n", poolSize);
     exit(-1);
   }
-  if ((data = static_cast<char*>(malloc(poolSize))) == nullptr) {
+  if ((db = data = static_cast<char*>(malloc(poolSize))) == nullptr) {
     printf("could not malloc(%lld) data area\n", poolSize);
     exit(-1);
   }
@@ -19,4 +19,9 @@ Project::Parser::Parser() : line(1) {
   memset(sym, 0, poolSize);
   memset(e, 0, poolSize);
   memset(data, 0, poolSize);
+}
+
+Project::Parser::~Parser() {
+  free(sym);
+  free(db);
 }

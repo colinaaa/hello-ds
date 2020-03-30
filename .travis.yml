@@ -36,7 +36,7 @@ script:
 
 before_install:
   - eval "${MATRIX_EVAL}"
-  - pip install --user cpp-coveralls
+  - pip3 install --user cpp-coveralls
 
 after_success:
   - lcov --list cov.info # debug info

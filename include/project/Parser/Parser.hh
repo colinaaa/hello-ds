@@ -15,9 +15,9 @@ class Parser {
  private:
   char *p{}, *lp = nullptr,  // current position in source code
       *data{};               // data pointer
+  char *db;
 
-  int *e,
-      *le;  // current position in emitted code
+  int *e;
 
   int *id = nullptr,  // currently parsed identifier
       *n = nullptr,   // node of AST tree
@@ -105,6 +105,7 @@ class Parser {
 
  public:
   Parser();
+  ~Parser();
   inline void setSrc(const bool v = true) noexcept { src = v; }
   inline void setDebug(const bool v = true) noexcept { debug = v; }
   inline void setTree(const bool v = true) noexcept { tree = v; }
