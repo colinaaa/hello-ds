@@ -5,6 +5,7 @@ on: [push]
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-18.04]
         env:
@@ -30,3 +31,10 @@ jobs:
     - name: all
       env: ${{ matrix.env }}
       run: make ci
+    - name: install valgrind
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install valgrind
+    - name: run valgrind
+      needs: install valgrind
+      if: runner.os == 'Linux'
+      run: valgrind --leak-check=full ./cmake-build-valgrind/test/Test
