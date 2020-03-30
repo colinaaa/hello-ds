@@ -17,7 +17,7 @@ class Parser {
       *data{};               // data pointer
   char *db;
 
-  int *e;
+  int *e, *eb;
 
   int *id = nullptr,  // currently parsed identifier
       *n = nullptr,   // node of AST tree
@@ -129,7 +129,7 @@ class Parser {
   static inline auto tokenName(int tk);
 
  public:
-  inline auto parseToken(std::string& t) {
+  inline auto parseToken(std::string &t) {
     p = t.data();
     next();
     return tk;

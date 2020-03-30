@@ -17,6 +17,8 @@ inline auto Project::Parser::tokenName(int tk) {
 auto Project::Parser::run(const std::string& filename) -> int {
   int fd, bt, *idmain, *ast;
   int i, *t, *b;  // temps
+  char *pb;
+  int *tb;
   // setup keywords and library functions
   static char keywords[] = "char else enum if int return sizeof for continue break while";
   static char library[] = "open read close printf malloc free memset memcmp exit void main";
@@ -42,7 +44,7 @@ auto Project::Parser::run(const std::string& filename) -> int {
   next();
   idmain = id;  // keep track of main
 
-  if (!(lp = p = static_cast<char*>(malloc(poolSize)))) {
+  if (!(pb = lp = p = static_cast<char*>(malloc(poolSize)))) {
     printf("could not malloc(%d) source area\n", poolSize);
     return -1;
   }
@@ -235,6 +237,8 @@ auto Project::Parser::run(const std::string& filename) -> int {
   }
 
   out.close();
+  free(tb);
+  free(pb);
 
   return 0;
 }

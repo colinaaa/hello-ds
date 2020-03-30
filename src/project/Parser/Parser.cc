@@ -1,3 +1,6 @@
+#include <fmt/printf.h>
+using fmt::printf;
+
 #include "Parser.hh"
 
 Project::Parser::Parser() : line(1) {
@@ -7,7 +10,7 @@ Project::Parser::Parser() : line(1) {
     printf("could not malloc(%lld) symbol area\n", poolSize);
     exit(-1);
   }
-  if ((e = static_cast<int*>(malloc(poolSize))) == nullptr) {
+  if ((eb = e = static_cast<int*>(malloc(poolSize))) == nullptr) {
     printf("could not malloc(%lld) text area\n", poolSize);
     exit(-1);
   }
@@ -24,4 +27,5 @@ Project::Parser::Parser() : line(1) {
 Project::Parser::~Parser() {
   free(sym);
   free(db);
+  free(eb);
 }
