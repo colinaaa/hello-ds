@@ -24,7 +24,7 @@ int main()
 
 	Y = x - sizeof(char);
 
-	p[1] = !30 >> -0777;
+	p[1] = !30 >> 007;
 
 	// other  loooooooooooooooooooooooong comment
 	x = !x - ~y / (y * x);

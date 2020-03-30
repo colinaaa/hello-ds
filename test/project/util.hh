@@ -10,17 +10,12 @@
 
 #include "Parser/Parser.hh"
 
-inline auto cwd() {
-  const auto cwd = std::filesystem::current_path();
-  return cwd;
-}
+inline auto cwd() { return std::filesystem::current_path(); }
 
 inline auto root() {
-  const auto root =
-      cwd().filename() == "hello-ds"
-          ? cwd()
-          : cwd().filename() == "test" ? cwd().parent_path().parent_path() : cwd().parent_path();
-  return root;
+  return cwd().filename() == "hello-ds"
+             ? cwd()
+             : cwd().filename() == "test" ? cwd().parent_path().parent_path() : cwd().parent_path();
 }
 
 #ifdef COVERAGE

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(hello-ds)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -15,6 +15,8 @@ SET(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} --cov
 set(CMAKE_CXX_FLAGS_VALGRIND "${CMAKE_CXX_FLAGS_DEBUG_INIT} -O0")
 if(DEFINED ENV{CI})
     include_directories(SYSTEM /usr/include/c++/8)
+    set(CMAKE_CXX_FLAGS -stdlib=libc++)
+    set(CMAKE_CXX_LINKER_FLAGS -stdlib=libc++)
 else()
     # local dev
     if(CMAKE_BUILD_TYPE STREQUAL Coverage)
