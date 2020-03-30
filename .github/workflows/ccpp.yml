@@ -12,14 +12,10 @@ jobs:
     - name: dep
       env:
         CI: gh
-        CXX: clang++
-        CC: clang
       run: make dep
     - name: main
       env:
         CI: gh
-        CXX: clang++
-        CC: clang
       run: make main
     # - name: valgrind
     #   env:
@@ -30,6 +26,4 @@ jobs:
     - name: all
       env:
         CI: gh
-        CXX: clang++
-        CC: clang
       run: make ci

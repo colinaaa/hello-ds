@@ -2,7 +2,7 @@ language: cpp
 dist: bionic
 install: make dep
 compiler:
-- clang
+- gcc
 os:
 - linux
 addons:
