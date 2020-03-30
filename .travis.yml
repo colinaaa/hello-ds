@@ -9,6 +9,7 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - lcov
+            - gcc-9
             - g++-9
       env:
         - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
@@ -35,6 +36,7 @@ script:
 
 before_install:
   - eval "${MATRIX_EVAL}"
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9 --slave /usr/bin/gcov gcov /usr/bin/gcov-9
   - pip install --user cpp-coveralls
 
 after_success:
