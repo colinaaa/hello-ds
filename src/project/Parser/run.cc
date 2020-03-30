@@ -56,7 +56,7 @@ auto Project::Parser::run(const std::string& filename) -> int {
     printf("read() returned %d\n", i);
     return -1;
   }
-  if (!(ast = static_cast<int*>(malloc(poolSize)))) {
+  if (!(tb = ast = static_cast<int*>(malloc(poolSize)))) {
     printf("could not malloc(%d) abstract syntax tree area\n", poolSize);
     return -1;
   }
