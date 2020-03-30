@@ -1,37 +1,42 @@
 language: cpp
-dist: bionic
-install: make dep
-compiler:
-- gcc
-os:
-- linux
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - lcov
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+      env:
+        - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
+
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+          packages:
+            - clang-9
+      env:
+        - MATRIX_EVAL="CC=clang-9 CXX=clang++-9"
+
+    - os: osx
+      osx_image: xcode11.3
+      env:
+        - MATRIX_EVAL="CC=clang CXX=clang++"
+
+script:
+  make ci
+  make cov.info
 
 before_install:
+  - eval "${MATRIX_EVAL}"
   - pip install --user cpp-coveralls
-
-env:
-  matrix:
-  - CI=travis
-script:
-  - make dep
-  - make ci
-  - make cov.info
-
-deploy:
-  provider: releases
-  api_key:
-    secure: Bu2RvbPBFlldqtet2pLbIg+MJ+Guq62HfH4o6ALExsTmB6aYaTGJOkP5JW38VyVcYz8Uiepc6B8MsXzZ0lzAZ7OZdh7ZY5YDYIPEqMm16PF2XPxLBgoUK6jsNlxFO+mEVHX5xy7VMXc10sV3gfyhSDVfxe4YStzv7/M8wLIDqqEcVxlrbQ7ObR8rySpdnRu18vv+NjcKlM7CXqYJJgatKKauA2cAKNsORrWIkH+ytvZKdilbeqXYri1Mbfis9bMH9SaFkDTBABRybWcM+F+i/RXhlew62FnnVnau44GtqixyTupuC4sYfzV5gfVOfYlLZYqZYz7OEnB5jeX5myd8j2TdcHrF3aQyMxzevXoLDwWtwKtVdwkMFAiSIIZtKpUcRelZdZpnBD/T+GrQ3Tqqx6SFHgye2B4YK8hbVprQVjMdBAw2kFCnca0k6OidYod7Bm6rO8l5amnON6kFMpuGu9BsYZ/QZrckU/0p2PwZVGuL3niL6GT1mdCkoD6UKpx2endtO4kt92uwQFRIx+CItN9LG6mKUGccsyv/KVEdvOznCZZfxr3pgh4uOjyvCEK+Tez0mFnIzWxQqoEaAgZBBJW4cUk7ZlI2cl8dOkB01jL1OsNdAMb3x9zvctMrq9GZWvq4fUK6HOUyASj4IU3UeQV8k3LaoeN8PRcTAIVqkMU=
-  file: "./build/test/Test"
-  cleanup: true
-  draft: true
-  on:
-    tags: true
 
 after_success:
   - lcov --list cov.info # debug info
