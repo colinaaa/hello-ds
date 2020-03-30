@@ -1,3 +1,7 @@
 #!/bin/bash
 
-exec llvm-cov gcov "$@"
+if [[ $CC =~ ^[Gg]cc.* ]]; then
+	exec gcov "$@";
+else
+	exec llvm-cov gcov "$@";
+fi
