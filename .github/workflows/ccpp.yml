@@ -4,32 +4,35 @@ on: [push]
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        env:
+          - { CI: gh, CC: gcc-9, CXX: g++-9 }
+          - { CI: gh, CC: clang-9, CXX: clang++-9 }
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: dep
-      env:
-        CI: gh
-        CXX: g++-9
-        CC: gcc-9
+      env: ${{ matrix.env }}
       run: make dep
     - name: main
-      env:
-        CI: gh
-        CXX: g++-9
-        CC: gcc-9
+      env: ${{ matrix.env }}
       run: make main
-    # - name: valgrind
-    #   env:
-    #     CI: gh
-    #     CXX: clang++
-    #     CC: clang
-    #   run: make valgrind
     - name: all
-      env:
-        CI: gh
-        CXX: g++-9
-        CC: gcc-9
+      env: ${{ matrix.env }}
       run: make ci
+    - name: cov
+      run: make cov.info && lcov --list cov.info
+    - uses: codecov/codecov-action@v1
+      with:
+        file: ./cov.info # optional
+    - uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./cov.info
+        parallel: true
+    - uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
