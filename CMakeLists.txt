@@ -15,8 +15,8 @@ SET(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} --cov
 set(CMAKE_CXX_FLAGS_VALGRIND "${CMAKE_CXX_FLAGS_DEBUG_INIT} -O0")
 if(DEFINED ENV{CI})
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "[Cc]lang")
-        add_compile_options(-stdlib=libc++)
-        add_link_options(-stdlib=libc++ -lc++abi)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -v")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
     endif()
 else()
     # local dev
